@@ -1,0 +1,214 @@
+/* Reset base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+    line-height: 1.5;
+}
+
+/* Navbar */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #050505;
+    border-bottom: 2px solid #39ff14;
+}
+
+header .logo {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5rem;
+    color: #39ff14;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ff39f0;
+    text-shadow: 0 0 10px #ff39f0;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(180deg, #050505, #111111);
+}
+
+.hero h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #39ff14;
+    text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 15px 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #0a0a0a;
+    background-color: #ff39f0;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #ff00e0;
+    box-shadow: 0 0 20px #ff39f0;
+}
+
+/* Footer */
+footer {
+    padding: 30px 40px;
+    background-color: #050505;
+    border-top: 2px solid #39ff14;
+    text-align: center;
+}
+
+footer .socials a {
+    margin: 0 10px;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+footer .socials a:hover {
+    color: #ff39f0;
+    text-shadow: 0 0 10px #ff39f0;
+}
+
+/* Map section */
+.map-section {
+    padding: 60px 40px;
+    text-align: center;
+    background-color: #0a0a0a;
+}
+
+/* Contenitore mappa */
+.italy-map-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+/* SVG mappa */
+.italy-map {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 2px solid #ff39f0 !important; /* bordo neon rosa */
+    border-radius: 10px;
+    background-color: #0a0a0a !important; /* sfondo scuro */
+}
+
+
+/* Province */
+.italy-map path {
+    fill: #111 !important;               /* base scura */
+    stroke: #39ff14 !important;          /* bordo neon verde */
+    stroke-width: 1.5 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    filter: drop-shadow(0 0 5px #39ff14) !important; /* glow verde leggero */
+}
+
+/* Hover neon */
+.italy-map path:hover {
+    fill: #ff39f0 !important;            /* riempimento neon fucsia */
+    stroke: #39ff14 !important;          /* bordo verde neon */
+    stroke-width: 2 !important;
+    filter: drop-shadow(0 0 15px #ff39f0)
+            drop-shadow(0 0 10px #39ff14) !important; /* glow combinato fucsia/verde */
+	/*transform: scale(1.05)*/
+}
+
+
+/* Testo province */
+.italy-map text {
+    pointer-events: none !important;
+    font-family: 'Press Start 2P', monospace !important;
+    fill: #39ff14 !important;
+    font-size: 10px !important;
+    text-shadow: 0 0 5px #39ff14, 0 0 10px #39ff14 !important;
+}
+
+/* Overlay artisti */
+.overlay {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(10,10,10,0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay-content {
+    background-color: #111;
+    padding: 30px;
+    border: 2px solid #ff39f0;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80%;
+    overflow-y: auto;
+    text-align: center;
+}
+
+#close-overlay {
+    float: right;
+    font-size: 2rem;
+    color: #ff39f0;
+    cursor: pointer;
+}
+
+.artist-card-overlay {
+    background-color: #222;
+    border: 2px solid #39ff14;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.artist-card-overlay:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px #ff39f0;
+}
