@@ -213,25 +213,31 @@ footer .socials a:hover {
     box-shadow: 0 0 20px #ff39f0;
 }
 
+
+.menu-toggle {
+  display: none;
+  font-size: 2rem;
+  color: #39ff14;
+  cursor: pointer;
+}
+
 /*PER SMARTPHONE*/
 /*navbar responsive*/
 @media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 20px;
-  }
-
   nav ul {
+    display: none; /* il menu è nascosto di default */
     flex-direction: column;
     width: 100%;
   }
 
-  nav ul li {
-    margin: 10px 0;
+  nav ul.show {
+    display: flex; /* lo mostriamo quando attivo */
+  }
+
+  .menu-toggle {
+    display: block; /* mostra hamburger su mobile */
   }
 }
-
 /*Hero section adattiva*/
 @media (max-width: 768px) {
   .hero {

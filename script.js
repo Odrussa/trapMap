@@ -1,3 +1,9 @@
+
+document.getElementById("menu-toggle").addEventListener("click", function() {
+  document.querySelector("nav ul").classList.toggle("show");
+});
+
+
 let provinces = {};
 
 // Carica artisti dal JSON
