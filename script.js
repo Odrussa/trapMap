@@ -1,8 +1,6 @@
-
 document.getElementById("menu-toggle").addEventListener("click", function() {
   document.querySelector("nav ul").classList.toggle("show");
 });
-
 
 let provinces = {};
 
@@ -17,31 +15,10 @@ fetch('artists.json')
     });
   });
 
-// Funzione overlay
-function openOverlay(artists){
-  const overlay = document.getElementById('artist-overlay');
-  const cardsDiv = document.getElementById('artist-cards');
-  cardsDiv.innerHTML = '';
-
-  artists.forEach(a => {
-    let card = document.createElement('div');
-    card.classList.add('artist-card-overlay');
-    card.innerHTML = `
-      <h3>${a.name}</h3>
-      <p><strong>Crew:</strong> ${a.crew}</p>
-      <p>${a.bio}</p>
-      <a href="${a.spotify}" target="_blank">Ascolta su Spotify</a>
-    `;
-    cardsDiv.appendChild(card);
-  });
-
-  overlay.classList.remove('hidden');
+// 🔹 Nuova funzione per aprire la pagina artisti
+function apriPaginaArtisti(provincia) {
+  window.location.href = `artists.html?province=${encodeURIComponent(provincia)}`;
 }
-
-// Chiudi overlay
-document.getElementById('close-overlay').addEventListener('click', () => {
-  document.getElementById('artist-overlay').classList.add('hidden');
-});
 
 // Collegamento ID (dallo SVG) -> chiave nel JSON
 const provinceMap = {
@@ -49,7 +26,7 @@ const provinceMap = {
   ROMA: "Roma",
   NAPOLI: "Napoli",
   TRAPANI: "Trapani"
-  // aggiungi tutte le altre province
+  // aggiungi tutte le altre province qui
 };
 
 // Evento click sulle province
@@ -57,12 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('svg path').forEach(path => {
     path.addEventListener('click', () => {
       const provName = provinceMap[path.id.toUpperCase()];
-      if (provinces[provName]) {
-        openOverlay(provinces[provName]);
+      if (provName) {
+        apriPaginaArtisti(provName); // 🔹 Qui cambia: apre una nuova pagina invece dell’overlay
       } else {
-        alert("Nessun artista registrato in questa provincia 😢");
+        alert("Nessuna provincia associata a questo ID 😢");
       }
     });
   });
 });
-

@@ -1,0 +1,151 @@
+/* Reset base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+    line-height: 1.5;
+}
+
+/* Navbar */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #050505;
+    border-bottom: 2px solid #39ff14;
+}
+
+header .logo {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5rem;
+    color: #39ff14;
+}
+
+.back-button {
+    color: #39ff14;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.back-button:hover {
+    color: #ff39f0;
+    text-shadow: 0 0 10px #ff39f0;
+}
+
+/* Titolo pagina artisti */
+h1#page-title {
+    text-align: center;
+    color: #ff39f0;
+    margin: 30px 0;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Griglia card */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 0 40px 40px 40px;
+}
+
+/* Card artista */
+.artist-card {
+    background-color: #222;
+    border: 2px solid #39ff14;
+    border-radius: 12px;
+    padding: 15px;
+    width: 100%;
+    max-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.artist-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff39f0;
+}
+
+.artist-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.artist-card h3 {
+    margin: 10px 0 5px;
+    color: #ff39f0;
+}
+
+.artist-card p {
+    margin: 5px 0;
+    color: #39ff14;
+    font-size: 0.9rem;
+}
+
+.artist-card a {
+    color: #ff39f0;
+    text-decoration: none;
+    margin-top: 5px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.artist-card a:hover {
+    color: #39ff14;
+}
+
+/* Footer */
+footer {
+    padding: 30px 40px;
+    background-color: #050505;
+    border-top: 2px solid #39ff14;
+    text-align: center;
+}
+
+footer .socials a {
+    margin: 0 10px;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+footer .socials a:hover {
+    color: #ff39f0;
+    text-shadow: 0 0 10px #ff39f0;
+}
+
+/* Responsive: smartphone e tablet */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        padding: 0 20px 20px 20px;
+    }
+
+    h1#page-title {
+        font-size: 1.5rem;
+        margin: 20px 0;
+    }
+
+    .artist-card {
+        max-width: 180px;
+        padding: 10px;
+    }
+}
