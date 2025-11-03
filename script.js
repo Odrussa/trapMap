@@ -331,17 +331,17 @@ const provinceMap = {
   VICENZA: "Vicenza"
 };
 
-/*Evento cursore province*/
-document.addEventListener("DOMContentLoaded", () => {
+function setupProvinceInteractions(svgElement) {
   const tooltip = document.getElementById("tooltip");
+  if (!svgElement || !tooltip) {
+    return;
+  }
 
-  // Seleziona tutti i path con ID (cioè le province)
-  const provinces = document.querySelectorAll("svg path[id]");
+  const provinces = svgElement.querySelectorAll("path[id]");
 
   provinces.forEach(path => {
-    const provinceName = path.id; // L'id corrisponde al nome, es. "LATINA"
+    const provinceName = path.id;
 
-    // Mostra tooltip
     path.addEventListener("mousemove", e => {
       tooltip.style.opacity = "1";
       tooltip.style.left = e.pageX + 10 + "px";
@@ -349,27 +349,50 @@ document.addEventListener("DOMContentLoaded", () => {
       tooltip.innerText = provinceName;
     });
 
-    // Nascondi tooltip
     path.addEventListener("mouseleave", () => {
       tooltip.style.opacity = "0";
     });
-  });
-});
 
-
-// Evento click sulle province
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('svg path').forEach(path => {
-    path.addEventListener('click', () => {
+    path.addEventListener("click", () => {
       const provName = provinceMap[path.id.toUpperCase()];
       if (provName) {
-        apriPaginaArtisti(provName); // 🔹 Qui cambia: apre una nuova pagina invece dell’overlay
+        apriPaginaArtisti(provName);
       } else {
         alert("Nessuna provincia associata a questo ID 😢");
       }
     });
   });
-});
+}
+
+function loadItalyMap() {
+  const mapContainer = document.getElementById("map-container");
+  if (!mapContainer) {
+    return;
+  }
+
+  fetch("map.svg")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Impossibile caricare la mappa");
+      }
+      return response.text();
+    })
+    .then(svgText => {
+      const sanitizedSvg = svgText.replace(/<\?xml[^>]*?>/i, "");
+      mapContainer.innerHTML = sanitizedSvg;
+
+      const svgElement = mapContainer.querySelector("svg");
+      if (svgElement) {
+        svgElement.classList.add("italy-map");
+        setupProvinceInteractions(svgElement);
+      }
+    })
+    .catch(error => {
+      console.error("Errore durante il caricamento della mappa:", error);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", loadItalyMap);
 
 
 // ----------- POPUP LOGIN/REGISTRAZIONE -------------
@@ -477,8 +500,6 @@ loginForm.addEventListener('submit', function(e) {
         loginErrors.innerText = 'Errore di comunicazione col server.';
     });
 	
-	
 });
-
 
 
