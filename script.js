@@ -158,6 +158,31 @@ const provinceMap = {
   VICENZA: "Vicenza"
 };
 
+/*Evento cursore province*/
+document.addEventListener("DOMContentLoaded", () => {
+  const tooltip = document.getElementById("tooltip");
+
+  // Seleziona tutti i path con ID (cioè le province)
+  const provinces = document.querySelectorAll("svg path[id]");
+
+  provinces.forEach(path => {
+    const provinceName = path.id; // L'id corrisponde al nome, es. "LATINA"
+
+    // Mostra tooltip
+    path.addEventListener("mousemove", e => {
+      tooltip.style.opacity = "1";
+      tooltip.style.left = e.pageX + 10 + "px";
+      tooltip.style.top = e.pageY + 10 + "px";
+      tooltip.innerText = provinceName;
+    });
+
+    // Nascondi tooltip
+    path.addEventListener("mouseleave", () => {
+      tooltip.style.opacity = "0";
+    });
+  });
+});
+
 
 // Evento click sulle province
 document.addEventListener('DOMContentLoaded', () => {
@@ -172,3 +197,113 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+// ----------- POPUP LOGIN/REGISTRAZIONE -------------
+const loginPopup = document.getElementById('loginPopup');
+const registerPopup = document.getElementById('registerPopup');
+const registerErrors = document.getElementById('registerErrors');
+const loginErrors = document.getElementById('loginErrors');
+
+const registerForm = document.getElementById('registerForm');
+const loginForm = document.getElementById('loginForm');
+
+// Apri login/registrazione dal link
+document.getElementById('showLogin')?.addEventListener('click', e => {
+    e.preventDefault();
+    registerPopup.classList.add('hidden');
+    loginPopup.classList.remove('hidden');
+});
+
+document.getElementById('showRegister')?.addEventListener('click', e => {
+    e.preventDefault();
+    loginPopup.classList.add('hidden');
+    registerPopup.classList.remove('hidden');
+});
+
+// Chiudi popup
+document.getElementById('closeLogin')?.addEventListener('click', () => {
+    loginPopup.classList.add('hidden');
+});
+
+document.getElementById('closeRegister')?.addEventListener('click', () => {
+    registerPopup.classList.add('hidden');
+});
+
+// Funzioni per aprire popup
+function openLogin() { loginPopup.classList.remove('hidden'); }
+function openRegister() { registerPopup.classList.remove('hidden'); }
+
+// ------------------ REGISTRAZIONE ------------------
+registerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(registerForm);
+
+    fetch('register.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        registerErrors.innerHTML = ''; // reset errori
+        if (data.success) {
+            registerErrors.style.color = '#39ff14';
+            registerErrors.innerText = data.message;
+
+            setTimeout(() => {
+                registerPopup.classList.add('hidden');
+                registerErrors.innerText = '';
+                registerErrors.style.color = '#ff39f0';
+                registerForm.reset();
+            }, 2000);
+        } else {
+            data.errors.forEach(err => {
+                const p = document.createElement('p');
+                p.innerText = err;
+                registerErrors.appendChild(p);
+            });
+        }
+    })
+    .catch(err => {
+        console.error('Errore fetch:', err);
+        registerErrors.innerText = 'Errore di comunicazione col server.';
+    });
+});
+
+// ------------------ LOGIN ------------------
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(loginForm);
+
+    fetch('login.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        loginErrors.innerHTML = ''; // reset errori
+        if (data.success) {
+            loginErrors.style.color = '#39ff14';
+            loginErrors.innerText = data.message;
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } else {
+            data.errors.forEach(err => {
+                const p = document.createElement('p');
+                p.innerText = err;
+                loginErrors.appendChild(p);
+            });
+        }
+    })
+    .catch(err => {
+        console.error('Errore fetch:', err);
+        loginErrors.innerText = 'Errore di comunicazione col server.';
+    });
+});
+
+
+

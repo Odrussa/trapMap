@@ -7,11 +7,11 @@
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
 
+<body>
 <header>
   <div class="logo">TrapMap 🇮🇹</div>
-   <div class="menu-toggle" id="menu-toggle">☰</div>
+   <div class="menu-toggle" id="menu-toggle"></div>
   <nav>
     <ul>
       <li><a href="#">Home</a></li>
@@ -19,15 +19,20 @@
       <li><a href="#">Artisti</a></li>
       <li><a href="#">Crew</a></li>
       <li><a href="#">About</a></li>
+	  <li><a href="#" onclick="openLogin()">Login</a></li>
+	  <li><a href="#" onclick="openRegister()">Registrati</a></li>
     </ul>
   </nav>
 </header>
 
 <section class="hero">
   <h1>Mappa dell'underground italiano</h1>
-  <p>Scopri la scena rap / trap underground delle città italiane 🔥🕵️‍♂️</p>
-  <a href="#map" class="btn-primary">Vai alla Mappa</a>
+  <p>Scopri la scena rap underground delle città italiane </p>
+  <a href="#map" class="btn-primary hero-btn">Vai alla Mappa</a>
 </section>
+
+ <!-- Tooltip globale per nome provincia cursore-->
+ <div id="tooltip" class="tooltip"></div>
 
 <section id="map" class="map-section">
   <h2>La Mappa</h2>
@@ -741,7 +746,46 @@
   </svg>
     </svg>
   </div>
-</section>
+</section>+
+
+<!-- ---------------- POPUP LOGIN ---------------- -->
+<div id="loginPopup" class="overlay hidden">
+  <div class="overlay-content">
+    <span id="closeLogin" class="close-overlay">&times;</span>
+    <h2>Accedi</h2>
+    <form id="loginForm">
+		<!-- Contenitore per messaggi di errore -->
+		<div id="loginErrors" style="color: #ff39f0; margin-bottom: 10px;"></div>
+	
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit" class="btn-primary">Accedi</button>
+    </form>
+    <p>Non hai un account? <a href="#" id="showRegister">Registrati</a></p>
+  </div>
+</div>
+
+<!-- ---------------- POPUP REGISTRAZIONE ---------------- -->
+<div id="registerPopup" class="overlay hidden">
+  <div class="overlay-content">
+    <span id="closeRegister" class="close-overlay">&times;</span>
+    <h2>Registrati</h2>
+		<!-- Contenitore per messaggi di errore -->
+        <div id="registerErrors" style="color: #ff39f0; margin-bottom: 10px;"></div>
+		
+    <form id="registerForm">
+      <input type="text" name="nome" placeholder="Nome" required>
+      <input type="text" name="cognome" placeholder="Cognome" required>
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirm_password" placeholder="Conferma Password" required>
+      <button type="submit" class="btn-primary">Registrati</button>
+    </form>
+    <p>Hai già un account? <a href="#" id="showLogin">Accedi</a></p>
+  </div>
+</div>
+
 
 <footer>
   <p>© 2025 TrapMap - Progetto indipendente</p>
