@@ -82,14 +82,15 @@ function showProfileMenu(username) {
   toggleAuthLinks(false);
 
   const header = document.querySelector('header');
-  if (!header) {
+  const navList = document.querySelector('header nav ul');
+  if (!header || !navList) {
     return;
   }
 
   applyNavProfileState(true);
 
   if (!profileMenuItem) {
-    profileMenuItem = document.createElement('div');
+    profileMenuItem = document.createElement('li');
     profileMenuItem.className = 'profile-menu';
 
     profileButton = document.createElement('button');
@@ -111,7 +112,7 @@ function showProfileMenu(username) {
 
     profileMenuItem.appendChild(profileButton);
     profileMenuItem.appendChild(profileDropdown);
-    header.appendChild(profileMenuItem);
+    navList.appendChild(profileMenuItem);
 
     profileButton.addEventListener('click', event => {
       event.stopPropagation();
