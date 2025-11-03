@@ -2,6 +2,178 @@ document.getElementById("menu-toggle").addEventListener("click", function() {
   document.querySelector("nav ul").classList.toggle("show");
 });
 
+let profileMenuItem = null;
+let profileDropdown = null;
+let profileButton = null;
+let profileDocumentListenerActive = false;
+
+function toggleAuthLinks(show) {
+  const loginLi = document.querySelector('a[onclick="openLogin()"]')?.parentElement;
+  const registerLi = document.querySelector('a[onclick="openRegister()"]')?.parentElement;
+  const display = show ? '' : 'none';
+
+  if (loginLi) {
+    loginLi.style.display = display;
+  }
+
+  if (registerLi) {
+    registerLi.style.display = display;
+  }
+}
+
+function applyNavProfileState(enable) {
+  const nav = document.querySelector('header nav');
+  if (nav) {
+    nav.classList.toggle('nav-with-profile', enable);
+  }
+}
+
+function handleDocumentClick(event) {
+  if (profileMenuItem && profileDropdown && !profileMenuItem.contains(event.target)) {
+    profileDropdown.classList.remove('show');
+    if (profileButton) {
+      profileButton.setAttribute('aria-expanded', 'false');
+    }
+  }
+}
+
+function clearProfileMenu() {
+  if (profileMenuItem) {
+    profileMenuItem.remove();
+    profileMenuItem = null;
+  }
+
+  if (profileButton) {
+    profileButton.setAttribute('aria-expanded', 'false');
+  }
+
+  profileDropdown = null;
+  profileButton = null;
+
+  if (profileDocumentListenerActive) {
+    document.removeEventListener('click', handleDocumentClick);
+    profileDocumentListenerActive = false;
+  }
+
+  applyNavProfileState(false);
+}
+
+function handleLogout(event) {
+  event.preventDefault();
+
+  fetch('logout.php', {
+    method: 'POST',
+    credentials: 'same-origin'
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        clearProfileMenu();
+        toggleAuthLinks(true);
+        checkUserSession();
+      } else if (data.error) {
+        console.error('Errore logout:', data.error);
+      }
+    })
+    .catch(err => console.error('Errore logout:', err));
+}
+
+function showProfileMenu(username) {
+  toggleAuthLinks(false);
+
+  const header = document.querySelector('header');
+  if (!header) {
+    return;
+  }
+
+  applyNavProfileState(true);
+
+  if (!profileMenuItem) {
+    profileMenuItem = document.createElement('div');
+    profileMenuItem.className = 'profile-menu';
+
+    profileButton = document.createElement('button');
+    profileButton.type = 'button';
+    profileButton.className = 'profile-button';
+    profileButton.setAttribute('aria-haspopup', 'true');
+    profileButton.setAttribute('aria-expanded', 'false');
+    profileButton.setAttribute('aria-label', 'Apri il menu profilo');
+    profileButton.innerHTML = '<span aria-hidden="true">👤</span>';
+
+    profileDropdown = document.createElement('div');
+    profileDropdown.className = 'profile-dropdown';
+    profileDropdown.setAttribute('role', 'menu');
+    profileDropdown.setAttribute('aria-label', 'Opzioni profilo');
+    profileDropdown.innerHTML = `
+      <p class="profile-username"></p>
+      <button type="button" class="logout-button">Logout</button>
+    `;
+
+    profileMenuItem.appendChild(profileButton);
+    profileMenuItem.appendChild(profileDropdown);
+    header.appendChild(profileMenuItem);
+
+    profileButton.addEventListener('click', event => {
+      event.stopPropagation();
+      const isOpen = profileDropdown.classList.toggle('show');
+      profileButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    if (!profileDocumentListenerActive) {
+      document.addEventListener('click', handleDocumentClick);
+      profileDocumentListenerActive = true;
+    }
+
+    const logoutBtn = profileDropdown.querySelector('.logout-button');
+    if (logoutBtn) {
+      logoutBtn.setAttribute('role', 'menuitem');
+      logoutBtn.addEventListener('click', handleLogout);
+    }
+  }
+
+  if (profileDropdown) {
+    profileDropdown.classList.remove('show');
+  }
+
+  if (profileButton) {
+    profileButton.setAttribute('aria-expanded', 'false');
+  }
+
+  const usernameLabel = profileMenuItem?.querySelector('.profile-username');
+  if (usernameLabel) {
+    usernameLabel.textContent = username;
+  }
+}
+
+
+//----
+
+function checkUserSession() {
+  fetch('user_info.php', { credentials: 'same-origin' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Risposta non valida dal server');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.logged_in) {
+        showProfileMenu(data.username);
+      } else {
+        toggleAuthLinks(true);
+        clearProfileMenu();
+      }
+    })
+    .catch(err => {
+      console.error('Errore durante il controllo della sessione:', err);
+      toggleAuthLinks(true);
+      clearProfileMenu();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', checkUserSession);
+
+
 
 // 🔹 Nuova funzione per aprire la pagina artisti
 function apriPaginaArtisti(provincia) {
@@ -303,6 +475,8 @@ loginForm.addEventListener('submit', function(e) {
         console.error('Errore fetch:', err);
         loginErrors.innerText = 'Errore di comunicazione col server.';
     });
+	
+	
 });
 
 
