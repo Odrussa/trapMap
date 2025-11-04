@@ -61,7 +61,7 @@ function clearProfileMenu() {
 function handleLogout(event) {
   event.preventDefault();
 
-  fetch('logout.php', {
+  fetch('../controller/LogoutController.php', {
     method: 'POST',
     credentials: 'same-origin'
   })
@@ -150,7 +150,7 @@ function showProfileMenu(username) {
 //----
 
 function checkUserSession() {
-  fetch('user_info.php', { credentials: 'same-origin' })
+  fetch('../controller/UserInfoController.php', { credentials: 'same-origin' })
     .then(response => {
       if (!response.ok) {
         throw new Error('Risposta non valida dal server');
@@ -370,7 +370,7 @@ function loadItalyMap() {
     return;
   }
 
-  fetch("map.svg")
+  fetch("assets/img/map.svg")
     .then(response => {
       if (!response.ok) {
         throw new Error("Impossibile caricare la mappa");
@@ -436,7 +436,7 @@ registerForm.addEventListener('submit', function(e) {
 
     const formData = new FormData(registerForm);
 
-    fetch('register.php', {
+    fetch('../controller/RegisterController.php', {
         method: 'POST',
         body: formData
     })
@@ -473,7 +473,7 @@ loginForm.addEventListener('submit', function(e) {
 
     const formData = new FormData(loginForm);
 
-    fetch('login.php', {
+    fetch('../controller/LoginController.php', {
         method: 'POST',
         body: formData
     })
