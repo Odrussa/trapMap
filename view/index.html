@@ -71,34 +71,46 @@
       <button type="button" class="close-overlay" id="closeSuggestionForm" aria-label="Chiudi il form suggerimento">&times;</button>
     </div>
     <form id="suggestionForm" class="modal-form" novalidate>
-      <div class="form-grid">
-        <div class="form-field">
-          <label for="suggestArtistName">Nome artista suggerito *</label>
-          <input type="text" id="suggestArtistName" name="artist_name" required>
-        </div>
-        <div class="form-field">
-          <label for="suggestLocation">Provincia / Regione</label>
-          <select id="suggestLocation" name="location">
-            <option value="">Non specificato</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label for="suggestCategory">Categoria *</label>
-          <select id="suggestCategory" name="category" required>
-            <option value="">Seleziona</option>
-            <option value="rapper">Rapper</option>
-            <option value="producer">Producer</option>
-            <option value="both">Entrambi</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label for="suggestLinks">Link Spotify / Instagram *</label>
-          <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
-        </div>
-        <div class="form-field form-field-full">
-          <label for="suggestComment">Commento (facoltativo)</label>
-          <textarea id="suggestComment" name="comment" rows="4" placeholder="Perché dovremmo mappare questo artista?"></textarea>
-        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="suggestArtistName">Nome artista suggerito *</label>
+            <input type="text" id="suggestArtistName" name="artist_name" required>
+          </div>
+          <div class="form-field">
+            <label for="suggestArtistAlias">Alias</label>
+            <input type="text" id="suggestArtistAlias" name="alias" placeholder="@alias">
+          </div>
+          <div class="form-field">
+            <label for="suggestLocation">Provincia</label>
+            <select id="suggestLocation" name="province">
+              <option value="">Non specificato</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="suggestCategory">Categoria *</label>
+            <select id="suggestCategory" name="category" required>
+              <option value="">Seleziona</option>
+              <option value="rapper">Rapper</option>
+              <option value="producer">Producer</option>
+              <option value="both">Entrambi</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="suggestInstagramFacebook">Link Instagram / Facebook *</label>
+            <input type="url" id="suggestInstagramFacebook" name="instagram_facebook" placeholder="https://" required>
+          </div>
+          <div class="form-field">
+            <label for="suggestSpotify">Link Spotify</label>
+            <input type="url" id="suggestSpotify" name="spotify" placeholder="https://open.spotify.com/">
+          </div>
+          <div class="form-field">
+            <label for="suggestSoundcloud">Link SoundCloud</label>
+            <input type="url" id="suggestSoundcloud" name="soundcloud" placeholder="https://soundcloud.com/">
+          </div>
+          <div class="form-field form-field-full">
+            <label for="suggestComment">Commento (facoltativo)</label>
+            <textarea id="suggestComment" name="comment" rows="4" placeholder="Perché dovremmo mappare questo artista?"></textarea>
+          </div>
       </div>
       <div class="form-feedback" id="suggestionFeedback" role="status" aria-live="polite"></div>
       <button type="submit" class="btn-primary submit-button">Invia suggerimento</button>

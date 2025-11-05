@@ -16,6 +16,7 @@ let profileMenuItem = null;
 let profileButton = null;
 let globalNotificationTimeout = null;
 let artistCardMode = 'create';
+let isLoadingArtistCard = false;
 
 const profilePanel = document.getElementById('profilePanel');
 const profilePanelBackdrop = document.getElementById('profilePanelBackdrop');
@@ -32,6 +33,10 @@ const suggestionForm = document.getElementById('suggestionForm');
 const suggestionFeedback = document.getElementById('suggestionFeedback');
 const closeSuggestionButton = document.getElementById('closeSuggestionForm');
 const suggestArtistCta = document.getElementById('suggestArtistCta');
+const suggestionAliasInput = document.getElementById('suggestArtistAlias');
+const suggestionInstagramInput = document.getElementById('suggestInstagramFacebook');
+const suggestionSpotifyInput = document.getElementById('suggestSpotify');
+const suggestionSoundcloudInput = document.getElementById('suggestSoundcloud');
 
 const artistCardModal = document.getElementById('artistCardModal');
 const artistCardForm = document.getElementById('artistCardForm');
@@ -127,7 +132,7 @@ function updateProfilePanelState() {
   setActionVisibility(profileActionSuggest, isLogged);
   setActionVisibility(profileActionMySuggestions, isLogged);
   setActionVisibility(profileActionLogout, isLogged);
-  setActionVisibility(profileActionCreateCard, isLogged && userSession.isArtist && !userSession.hasArtistCard);
+  setActionVisibility(profileActionCreateCard, isLogged && !userSession.hasArtistCard);
   setActionVisibility(profileActionEditCard, isLogged && userSession.hasArtistCard);
 }
 
@@ -253,10 +258,10 @@ function showProfileMenu(username) {
 }
 
 function applySessionData(data) {
-  userSession.loggedIn = true;
-  userSession.username = data.username || '';
-  userSession.isArtist = Boolean(data.is_artist);
-  userSession.hasArtistCard = Boolean(data.has_artist_card);
+  userSession.loggedIn = Boolean(data && data.logged_in);
+  userSession.username = data?.username || '';
+  userSession.isArtist = Boolean(data && data.is_artist);
+  userSession.hasArtistCard = Boolean(data && data.has_artist_card);
   showProfileMenu(userSession.username || 'Profilo');
 }
 
@@ -340,9 +345,17 @@ function openArtistCardForm(mode = 'create') {
   artistCardModal.classList.remove('hidden');
   artistCardModal.setAttribute('aria-hidden', 'false');
   setFormFeedback(artistCardFeedback, '');
+
+  if (mode === 'edit') {
+    loadArtistCardForEdit();
+  } else {
+    artistCardForm?.reset();
+    updateArtistPreviewImage(null);
+    refreshArtistPreview();
+  }
 }
 
-function closeArtistCardForm() {
+function closeArtistCardForm({ reset = false } = {}) {
   if (!artistCardModal) {
     return;
   }
@@ -350,13 +363,77 @@ function closeArtistCardForm() {
   artistCardModal.classList.add('hidden');
   artistCardModal.setAttribute('aria-hidden', 'true');
 
-  if (artistCardMode === 'create') {
+  if (reset || artistCardMode === 'create') {
     artistCardForm?.reset();
     updateArtistPreviewImage(null);
     refreshArtistPreview();
   }
 
   setFormFeedback(artistCardFeedback, '');
+}
+
+function fillArtistCardForm(data) {
+  if (!data || !artistCardForm) {
+    return;
+  }
+
+  if (artistNameInput) {
+    artistNameInput.value = data.nome_artista || '';
+  }
+  if (artistAliasInput) {
+    artistAliasInput.value = data.alias || '';
+  }
+  if (artistProvinceInput) {
+    artistProvinceInput.value = data.provincia || '';
+  }
+  if (artistRegionInput) {
+    artistRegionInput.value = data.regione || '';
+  }
+  if (artistCategoryInput) {
+    artistCategoryInput.value = data.categoria || '';
+  }
+  if (artistSpotifyInput) {
+    artistSpotifyInput.value = data.spotify || '';
+  }
+  if (artistInstagramInput) {
+    artistInstagramInput.value = data.instagram || '';
+  }
+  if (artistSoundcloudInput) {
+    artistSoundcloudInput.value = data.soundcloud || '';
+  }
+
+  refreshArtistPreview();
+}
+
+function loadArtistCardForEdit() {
+  if (isLoadingArtistCard) {
+    return;
+  }
+
+  isLoadingArtistCard = true;
+  setFormFeedback(artistCardFeedback, 'Caricamento dati in corso…', 'info');
+
+  fetch('../controller/ArtistCardController.php', { credentials: 'same-origin' })
+    .then(async response => {
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || !payload.success) {
+        const message = payload.errors?.join(' ') || 'Impossibile recuperare la tua card.';
+        throw new Error(message);
+      }
+
+      return payload.data;
+    })
+    .then(data => {
+      fillArtistCardForm(data);
+      setFormFeedback(artistCardFeedback, '');
+    })
+    .catch(error => {
+      console.error('Errore caricamento artist card:', error);
+      setFormFeedback(artistCardFeedback, error.message || 'Impossibile caricare la tua card', 'error');
+    })
+    .finally(() => {
+      isLoadingArtistCard = false;
+    });
 }
 
 function handleSuggestAction() {
@@ -374,11 +451,6 @@ function handleCreateCardAction() {
   if (!userSession.loggedIn) {
     showGlobalNotification('Effettua il login per creare la tua artist card', 'warning');
     openLogin();
-    return;
-  }
-
-  if (!userSession.isArtist && !userSession.hasArtistCard) {
-    showGlobalNotification('Richiedi l’abilitazione come artista dal team TrapMap', 'warning');
     return;
   }
 
@@ -456,14 +528,34 @@ suggestionForm?.addEventListener('submit', event => {
 
   setFormFeedback(suggestionFeedback, 'Invio in corso...', 'info');
 
-  setTimeout(() => {
-    setFormFeedback(suggestionFeedback, 'Suggerimento inviato con successo ✅');
-    showGlobalNotification('Suggerimento inviato con successo ✅');
-    suggestionForm.reset();
-    setTimeout(() => {
-      closeSuggestionForm();
-    }, 900);
-  }, 850);
+  const formData = new FormData(suggestionForm);
+
+  fetch('../controller/SuggestionsController.php', {
+    method: 'POST',
+    body: formData,
+    credentials: 'same-origin'
+  })
+    .then(async response => {
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || !payload.success) {
+        const errors = payload.errors?.join(' ') || 'Impossibile inviare il suggerimento.';
+        throw new Error(errors);
+      }
+
+      return payload;
+    })
+    .then(data => {
+      setFormFeedback(suggestionFeedback, data.message || 'Suggerimento inviato con successo ✅');
+      showGlobalNotification(data.message || 'Suggerimento inviato con successo ✅');
+      suggestionForm.reset();
+      setTimeout(() => {
+        closeSuggestionForm();
+      }, 900);
+    })
+    .catch(error => {
+      console.error('Errore invio suggerimento:', error);
+      setFormFeedback(suggestionFeedback, error.message || 'Errore durante l’invio del suggerimento', 'error');
+    });
 });
 
 artistCardForm?.addEventListener('submit', event => {
@@ -474,24 +566,51 @@ artistCardForm?.addEventListener('submit', event => {
     return;
   }
 
-  const successMessage = artistCardMode === 'edit'
-    ? 'Artist card aggiornata ✅'
-    : 'Artist card pubblicata ✅';
-
   setFormFeedback(artistCardFeedback, 'Salvataggio in corso...', 'info');
 
-  setTimeout(() => {
-    setFormFeedback(artistCardFeedback, successMessage);
-    showGlobalNotification(successMessage);
-    userSession.isArtist = true;
-    userSession.hasArtistCard = true;
-    updateProfilePanelState();
-    if (artistCardMode === 'create') {
-      setTimeout(() => {
-        closeArtistCardForm();
-      }, 1100);
-    }
-  }, 1000);
+  const formData = new FormData(artistCardForm);
+
+  fetch('../controller/ArtistCardController.php', {
+    method: 'POST',
+    body: formData,
+    credentials: 'same-origin'
+  })
+    .then(async response => {
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || !payload.success) {
+        const errors = payload.errors?.join(' ') || 'Impossibile salvare la card.';
+        throw new Error(errors);
+      }
+
+      return payload;
+    })
+    .then(data => {
+      const previousMode = artistCardMode;
+      const message = data.message || (previousMode === 'edit'
+        ? 'La tua card è stata aggiornata.'
+        : 'La tua scheda è stata inviata e verrà valutata dallo staff entro poche ore.');
+      setFormFeedback(artistCardFeedback, message);
+      showGlobalNotification(message);
+      userSession.isArtist = true;
+      userSession.hasArtistCard = true;
+      updateProfilePanelState();
+      if (previousMode === 'create') {
+        setTimeout(() => {
+          closeArtistCardForm({ reset: true });
+          artistCardMode = 'edit';
+        }, 1100);
+      } else {
+        artistCardMode = 'edit';
+      }
+    })
+    .catch(error => {
+      console.error('Errore salvataggio artist card:', error);
+      setFormFeedback(artistCardFeedback, error.message || 'Errore durante il salvataggio della card', 'error');
+      if (error.message && error.message.toLowerCase().includes('autenticazione')) {
+        showGlobalNotification('Sessione scaduta. Accedi per continuare.', 'warning');
+        openLogin();
+      }
+    });
 });
 
 function refreshArtistPreview() {
