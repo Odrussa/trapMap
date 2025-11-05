@@ -9,6 +9,12 @@ class Database
 
     private function __construct()
     {
+		// Recupera variabili d’ambiente (configurate in .env o nel sistema)
+		putenv('DB_HOST=localhost');
+		putenv('DB_NAME=trapmap');
+		putenv('DB_USER=root');
+		putenv('DB_PASS=Ninodollaro$04');
+
         $host = getenv('DB_HOST') ?: 'localhost';
         $dbName = getenv('DB_NAME') ?: 'trapmap';
         $user = getenv('DB_USER') ?: 'root';

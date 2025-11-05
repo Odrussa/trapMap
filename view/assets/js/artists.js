@@ -42,6 +42,11 @@ class ArtistCardFactory {
     const provinceInfo = document.createElement('p');
     provinceInfo.innerHTML = `<strong>Provincia:</strong> ${artist.provincia}`;
     card.appendChild(provinceInfo);
+	
+	// 🔹 Aggiungiamo la categoria
+  const categoryInfo = document.createElement('p');
+  categoryInfo.innerHTML = `<strong>Categoria:</strong> ${artist.categorie || '—'}`;
+  card.appendChild(categoryInfo);
 
     const socials = document.createElement('div');
     socials.classList.add('social-links');
