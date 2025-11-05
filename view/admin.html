@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrapMap • Admin</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="admin-container">
+    <section aria-labelledby="suggestionsTitle">
+      <h1 id="suggestionsTitle">Suggerimenti ricevuti</h1>
+      <p id="adminListStatus" role="status" aria-live="polite"></p>
+      <div class="table-wrapper">
+        <table class="suggestions-table" aria-describedby="suggestionsTitle">
+          <thead>
+            <tr>
+              <th scope="col">Artista</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Provincia</th>
+              <th scope="col">Contatti</th>
+              <th scope="col">Note</th>
+              <th scope="col">Stato</th>
+              <th scope="col">Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="suggestionsTableBody">
+            <tr>
+              <td colspan="7">Caricamento suggerimenti…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section aria-labelledby="createCardTitle">
+      <h2 id="createCardTitle">Crea artist card</h2>
+      <p>Seleziona un suggerimento dalla lista per compilare automaticamente i campi.</p>
+      <div id="adminFeedback" role="status" aria-live="polite"></div>
+      <form id="adminCreateCardForm" class="admin-form" novalidate>
+        <input type="hidden" id="adminSuggestionId" name="suggestion_id">
+        <div>
+          <label for="adminArtistName">Nome artista *</label>
+          <input type="text" id="adminArtistName" name="nome_artista" required>
+        </div>
+        <div>
+          <label for="adminArtistAlias">Alias</label>
+          <input type="text" id="adminArtistAlias" name="alias" placeholder="@alias">
+        </div>
+        <div>
+          <label for="adminArtistProvince">Provincia</label>
+          <input type="text" id="adminArtistProvince" name="provincia" placeholder="Provincia">
+        </div>
+        <div>
+          <label for="adminArtistCategory">Categoria *</label>
+          <select id="adminArtistCategory" name="categoria" required>
+            <option value="">Seleziona</option>
+            <option value="rapper">Rapper</option>
+            <option value="producer">Producer</option>
+            <option value="both">Entrambi</option>
+          </select>
+        </div>
+        <div>
+          <label for="adminInstagramFacebook">Instagram / Facebook *</label>
+          <input type="url" id="adminInstagramFacebook" name="instagram_facebook" placeholder="https://" required>
+        </div>
+        <div>
+          <label for="adminSpotify">Spotify</label>
+          <input type="url" id="adminSpotify" name="spotify" placeholder="https://open.spotify.com/">
+        </div>
+        <div>
+          <label for="adminSoundcloud">SoundCloud</label>
+          <input type="url" id="adminSoundcloud" name="soundcloud" placeholder="https://soundcloud.com/">
+        </div>
+        <div>
+          <label for="adminNotes">Note interne</label>
+          <textarea id="adminNotes" name="commento" placeholder="Annotazioni interne" disabled></textarea>
+        </div>
+        <button type="submit" class="primary">Verifica e pubblica</button>
+      </form>
+    </section>
+  </main>
+  <script src="assets/js/admin.js" type="module"></script>
+</body>
+</html>
