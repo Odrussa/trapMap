@@ -43,6 +43,11 @@ class ArtistCardFactory {
     provinceInfo.innerHTML = `<strong>Provincia:</strong> ${artist.provincia}`;
     card.appendChild(provinceInfo);
 
+    const categories = document.createElement('p');
+    const hasCategories = Array.isArray(artist.categorie) && artist.categorie.length > 0;
+    categories.innerHTML = `<strong>Categorie:</strong> ${hasCategories ? artist.categorie.join(', ') : '—'}`;
+    card.appendChild(categories);
+
     const socials = document.createElement('div');
     socials.classList.add('social-links');
     this.appendSocialLink(socials, artist.spotify, 'Spotify');
