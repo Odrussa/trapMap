@@ -13,22 +13,61 @@ class ArtistRepository
 
     public function findByProvince(?string $province = null): array
     {
-        $baseQuery = 'SELECT nome_artista AS nome, alias, provincia, regione, spotify, instagram, soundcloud, foto AS immagine FROM artists_card';
+        $baseQuery = <<<SQL
+            SELECT
+                a.id,
+                a.nome_artista AS nome,
+                a.alias,
+                a.provincia,
+                a.regione,
+                a.spotify,
+                a.instagram,
+                a.soundcloud,
+                a.foto AS immagine,
+                GROUP_CONCAT(DISTINCT COALESCE(c.name, c.nome) ORDER BY COALESCE(c.name, c.nome) SEPARATOR ',') AS categorie
+            FROM artists_card AS a
+            LEFT JOIN artist_categories AS ac ON ac.artist_id = a.id
+            LEFT JOIN categories AS c ON c.id = ac.category_id
+        SQL;
+
         $parameters = [];
 
         if ($province) {
-            $baseQuery .= ' WHERE provincia = :provincia';
+            $baseQuery .= ' WHERE a.provincia = :provincia';
             $parameters['provincia'] = $province;
         }
+
+        $baseQuery .= ' GROUP BY a.id, a.nome_artista, a.alias, a.provincia, a.regione, a.spotify, a.instagram, a.soundcloud, a.foto';
 
         $statement = $this->connection->prepare($baseQuery);
         $statement->execute($parameters);
         $artists = $statement->fetchAll();
 
         foreach ($artists as &$artist) {
+            $rawCategories = $artist['categorie'] ?? null;
+
             foreach ($artist as $key => $value) {
-                $artist[$key] = htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                if ($key === 'categorie') {
+                    continue;
+                }
+
+                if (is_string($value)) {
+                    $artist[$key] = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                } elseif ($value === null) {
+                    $artist[$key] = null;
+                }
             }
+
+            if ($rawCategories === null || $rawCategories === '') {
+                $artist['categorie'] = [];
+                continue;
+            }
+
+            $categoryList = array_filter(array_map('trim', explode(',', $rawCategories)));
+            $artist['categorie'] = array_map(
+                static fn(string $category): string => htmlspecialchars($category, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                $categoryList
+            );
         }
 
         return $artists;
