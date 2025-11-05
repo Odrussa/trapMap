@@ -15,17 +15,19 @@ class ArtistRepository
 
     public function findByProvince(?string $province = null): array
     {
-        $baseQuery = '
-            SELECT
-                a.nome_artista AS nome,
-                a.alias,
-                a.provincia,
-                a.regione,
-                a.spotify,
-                a.instagram,
-                a.soundcloud,
-                a.foto AS immagine,
-                GROUP_CONCAT(c.name SEPARATOR ", ") AS categorie
+        $selectColumns = [
+            'a.nome_artista AS nome',
+            'a.alias',
+            'a.provincia',
+            'a.regione',
+            'a.spotify',
+            'a.instagram',
+            'a.soundcloud',
+            'a.foto AS immagine',
+            'GROUP_CONCAT(c.name SEPARATOR ", ") AS categorie',
+        ];
+
+        $baseFrom = '
             FROM artists_card a
             LEFT JOIN artist_categories ac ON a.id = ac.artist_id
             LEFT JOIN categories c ON ac.category_id = c.id
@@ -33,27 +35,69 @@ class ArtistRepository
 
         $parameters = [];
 
-        $filters = [];
-
-        $baseQuery .= ' WHERE a.stato IN ("verified", "claimed")';
-
         if ($province) {
-            $filters[] = 'a.provincia = :provincia';
             $parameters['provincia'] = $province;
         }
 
-        if ($filters) {
-            $baseQuery .= ' AND ' . implode(' AND ', $filters);
+        $queryWithStatus = 'SELECT ' . implode(",\n                ", array_merge($selectColumns, ['a.stato AS stato'])) . $baseFrom;
+        $queryWithoutStatus = 'SELECT ' . implode(",\n                ", $selectColumns) . $baseFrom;
+
+        $conditions = [];
+
+        if ($province) {
+            $conditions[] = 'a.provincia = :provincia';
         }
 
-        // Raggruppa per artista
-        $baseQuery .= ' GROUP BY a.id';
+        if ($conditions) {
+            $whereClause = ' WHERE ' . implode(' AND ', $conditions);
+            $queryWithStatus .= $whereClause;
+            $queryWithoutStatus .= $whereClause;
+        }
 
-        $statement = $this->connection->prepare($baseQuery);
+        $queryWithStatus .= ' GROUP BY a.id';
+        $queryWithoutStatus .= ' GROUP BY a.id';
+
+        try {
+            $statement = $this->connection->prepare($queryWithStatus);
+            $statement->execute($parameters);
+            $artists = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            $artists = array_values(array_filter($artists, function (array $artist): bool {
+                $status = $artist['stato'] ?? null;
+
+                // Mostra comunque gli artisti se il campo non è presente o vuoto per
+                // mantenere la compatibilità con i dati esistenti, ma filtra i valori
+                // espliciti che non sono stati verificati.
+                if ($status === null || $status === '') {
+                    return true;
+                }
+
+                $normalized = strtolower(trim((string)$status));
+
+                if (is_numeric($status)) {
+                    return (int)$status === 1;
+                }
+
+                return in_array($normalized, self::VISIBLE_STATUSES, true);
+            }));
+
+            foreach ($artists as &$artist) {
+                unset($artist['stato']);
+                foreach ($artist as $key => $value) {
+                    $artist[$key] = htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                }
+            }
+
+            return $artists;
+        } catch (\PDOException $exception) {
+            error_log('ArtistRepository::findByProvince fallback: ' . $exception->getMessage());
+        }
+
+        // Fallback legacy: se la colonna "stato" non esiste ancora, eseguiamo la query originale.
+        $statement = $this->connection->prepare($queryWithoutStatus);
         $statement->execute($parameters);
         $artists = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        // Sanitizzazione base
         foreach ($artists as &$artist) {
             foreach ($artist as $key => $value) {
                 $artist[$key] = htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -65,10 +109,16 @@ class ArtistRepository
 
     public function userHasArtistCard(int $userId): bool
     {
-        $statement = $this->connection->prepare('SELECT COUNT(*) FROM artists_card WHERE user_id = :user_id');
-        $statement->execute(['user_id' => $userId]);
+        try {
+            $statement = $this->connection->prepare('SELECT COUNT(*) FROM artists_card WHERE user_id = :user_id');
+            $statement->execute(['user_id' => $userId]);
 
-        return (bool) $statement->fetchColumn();
+            return (bool) $statement->fetchColumn();
+        } catch (\PDOException $exception) {
+            error_log('ArtistRepository::userHasArtistCard legacy column missing: ' . $exception->getMessage());
+        }
+
+        return false;
     }
 
     public function existsByNameOrAlias(string $name, ?string $alias, ?int $excludeId = null): bool

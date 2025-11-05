@@ -258,8 +258,8 @@ function showProfileMenu(username) {
 }
 
 function applySessionData(data) {
-  userSession.loggedIn = true;
-  userSession.username = data.username || '';
+  userSession.loggedIn = Boolean(data && data.logged_in);
+  userSession.username = data?.username || '';
   userSession.isArtist = Boolean(data && data.is_artist);
   userSession.hasArtistCard = Boolean(data && data.has_artist_card);
   showProfileMenu(userSession.username || 'Profilo');
