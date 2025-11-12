@@ -443,10 +443,6 @@ nav ul li a:focus {
     gap: 8px;
 }
 
-.form-field-full {
-    grid-column: 1 / -1;
-}
-
 .form-field label {
     font-size: 0.9rem;
     font-weight: 600;

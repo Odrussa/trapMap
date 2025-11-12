@@ -35,9 +35,7 @@
     <p class="profile-panel-username" id="profileUsername"></p>
     <ul class="profile-panel-actions" role="menu">
       <li><button type="button" id="profileActionSuggest" class="profile-action" role="menuitem">Invia un suggerimento</button></li>
-      <li><button type="button" id="profileActionCreateCard" class="profile-action" role="menuitem">Crea la tua artist card</button></li>
       <li><button type="button" id="profileActionMySuggestions" class="profile-action" role="menuitem">I miei suggerimenti</button></li>
-      <li><button type="button" id="profileActionEditCard" class="profile-action" role="menuitem">Modifica la mia artist card</button></li>
       <li><button type="button" id="profileActionLogout" class="profile-action profile-action-logout" role="menuitem">Logout</button></li>
     </ul>
   </div>
@@ -77,7 +75,7 @@
           <input type="text" id="suggestArtistName" name="artist_name" required>
         </div>
         <div class="form-field">
-          <label for="suggestLocation">Provincia / Regione</label>
+          <label for="suggestLocation">Provincia </label>
           <select id="suggestLocation" name="location">
             <option value="">Non specificato</option>
           </select>
@@ -88,16 +86,20 @@
             <option value="">Seleziona</option>
             <option value="rapper">Rapper</option>
             <option value="producer">Producer</option>
-            <option value="both">Entrambi</option>
+            <option value="both">Rapper / Producer</option>
           </select>
         </div>
         <div class="form-field">
-          <label for="suggestLinks">Link Spotify / Instagram *</label>
+          <label for="instagram">Link Instagram *</label>
+          <input type="url" id="instagram" name="links" placeholder="https://" required>
+        </div>
+		 <div class="form-field">
+          <label for="suggestLinks">Link Spotify </label>
           <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
         </div>
-        <div class="form-field form-field-full">
-          <label for="suggestComment">Commento (facoltativo)</label>
-          <textarea id="suggestComment" name="comment" rows="4" placeholder="Perché dovremmo mappare questo artista?"></textarea>
+		 <div class="form-field">
+          <label for="suggestLinks">Link Soundcloud </label>
+          <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
         </div>
       </div>
       <div class="form-feedback" id="suggestionFeedback" role="status" aria-live="polite"></div>
