@@ -74,6 +74,10 @@
           <label for="suggestArtistName">Nome artista suggerito *</label>
           <input type="text" id="suggestArtistName" name="artist_name" required>
         </div>
+		<div class="form-field">
+          <label for="suggestArtistAlias">Alias</label>
+          <input type="text" id="suggestArtistAlias" name="artist_alias">
+        </div>
         <div class="form-field">
           <label for="suggestLocation">Provincia </label>
           <select id="suggestLocation" name="location">
@@ -95,11 +99,11 @@
         </div>
 		 <div class="form-field">
           <label for="suggestLinks">Link Spotify </label>
-          <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
+          <input type="url" id="suggestLinks" name="links" placeholder="https://">
         </div>
 		 <div class="form-field">
           <label for="suggestLinks">Link Soundcloud </label>
-          <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
+          <input type="url" id="suggestLinks" name="links" placeholder="https://">
         </div>
       </div>
       <div class="form-feedback" id="suggestionFeedback" role="status" aria-live="polite"></div>
@@ -151,6 +155,7 @@
             <label for="artistSpotify">Link Spotify</label>
             <input type="url" id="artistSpotify" name="spotify" placeholder="https://open.spotify.com/">
           </div>
+
           <div class="form-field">
             <label for="artistInstagram">Link Instagram</label>
             <input type="url" id="artistInstagram" name="instagram" placeholder="https://www.instagram.com/">

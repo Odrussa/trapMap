@@ -3,81 +3,85 @@ require_once __DIR__ . '/../model/bootstrap.php';
 
 header('Content-Type: application/json');
 
+// ✅ 1. Controllo del metodo
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'errors' => ['Metodo non consentito.']]);
     exit;
 }
 
+// ✅ 2. Decodifica JSON del payload
+$payload = json_decode(file_get_contents('php://input'), true);
+
+if (!is_array($payload)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'errors' => ['Formato del payload non valido.']]);
+    exit;
+}
+
+// ✅ 3. Recupera l'ID utente dalla sessione
+$session = SessionManager::getInstance();
+$idUser = $session->get('id_user');
+
+if ($idUser === null) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'errors' => ['Utente non autenticato.']]);
+    exit;
+}
+
 $input = [
-    'nome_artista' => trim($_POST['nome'] ?? ''),
-    'alias' => trim($_POST['cognome'] ?? ''),
-    'provincia' => trim($_POST['username'] ?? ''),
-    'instagram' => trim($_POST['email'] ?? ''),
-    'spotify' => $_POST['password'] ?? '',
-    'soundcloud' => $_POST['confirm_password'] ?? '',
-	'categoria' =>trim( $_POST['categoria'] ?? ''),
+    'nome_artista' => trim($payload['nome_artista'] ?? ''),
+    'alias' => trim($payload['alias'] ?? ''),
+    'provincia' => trim($payload['provincia'] ?? ''),
+    'instagram' => trim($payload['instagram'] ?? ''),
+    'spotify' => trim($payload['spotify'] ?? ''),
+    'soundcloud' => trim($payload['soundcloud'] ?? ''),
+    'categoria' => trim($payload['categoria'] ?? ''),
+	 'id_user'      => $idUser, // ✅ aggiunto qui
 ];
 
 $errors = [];
 
-foreach (['nome', 'cognome', 'username', 'email', 'password', 'confirm_password'] as $field) {
-    if ($input[$field] === '') {
-        $errors[] = 'Tutti i campi sono obbligatori.';
-        break;
+if ($input['nome_artista'] === '') {
+    $errors[] = 'Il nome dell\'artista è obbligatorio.';
+}
+
+if ($input['categoria'] === '') {
+    $errors[] = 'Seleziona una categoria.';
+}
+
+if ($input['instagram'] === '') {
+    $errors[] = 'Il link Instagram è obbligatorio.';
+} elseif (!filter_var($input['instagram'], FILTER_VALIDATE_URL)) {
+    $errors[] = 'Il link Instagram non è valido.';
+}
+
+foreach (['spotify' => 'Spotify', 'soundcloud' => 'SoundCloud'] as $field => $label) {
+    if ($input[$field] !== '' && !filter_var($input[$field], FILTER_VALIDATE_URL)) {
+        $errors[] = "Il link {$label} non è valido.";
     }
 }
 
-if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
-    $errors[] = 'Email non valida.';
-}
-
-if (strlen($input['password']) < 8) {
-    $errors[] = 'La password deve contenere almeno 8 caratteri.';
-}
-
-if ($input['password'] !== $input['confirm_password']) {
-    $errors[] = 'Le password non corrispondono.';
+if ($errors) {
+    http_response_code(422);
+    echo json_encode(['success' => false, 'errors' => $errors]);
+    exit;
 }
 
 $database = Database::getInstance()->getConnection();
 $suggestionRepository = new SuggestionRepository($database);
 
-if ($userRepository->existsByEmailOrUsername($input['email'], $input['username'])) {
-    $errors[] = 'Email o username già registrati.';
-}
-
-if ($errors) {
-    echo json_encode(['success' => false, 'errors' => $errors]);
-    exit;
-}
-
-$hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
-
 try {
-    $userId = $userRepository->create([
-        'nome' => $input['nome'],
-        'cognome' => $input['cognome'],
-        'username' => $input['username'],
-        'email' => $input['email'],
-        'password' => $hashedPassword,
-    ]);
+    $suggestionId = $suggestionRepository->create($input);
 } catch (Throwable $exception) {
-    error_log('Registration error: ' . $exception->getMessage());
+    error_log('Suggestion creation error: ' . $exception->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'errors' => ['Errore durante la registrazione.']]);
+    echo json_encode(['success' => false, 'errors' => ['Errore durante il salvataggio del suggerimento.']]);
     exit;
 }
 
-$session = SessionManager::getInstance();
-$session->set('user_id', $userId);
-$session->regenerate();
-
-$subject = AuthSubject::getInstance();
-$subject->notify('registration', [
-    'user_id' => $userId,
-    'username' => $input['username'],
-    'email' => $input['email'],
+echo json_encode([
+    'success' => true,
+    'message' => 'Suggerimento inviato con successo.',
+    'suggestion_id' => $suggestionId,
 ]);
-
-echo json_encode(['success' => true, 'message' => 'Registrazione completata!']);
