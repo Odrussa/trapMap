@@ -14,20 +14,20 @@ class SuggestionRepository
     public function create(array $data): int
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO suggestions (nome_artista, alias, provincia, instagram, spotify, soundcloud, categoria) VALUES (:nome_artista, :alias, :provincia, 
-			:instagram, :spotify, :soundcloud, :categoria)'
+            'INSERT INTO suggestions (nome_artista, alias, provincia, instagram, spotify, soundcloud, categoria)
+             VALUES (:nome_artista, :alias, :provincia, :instagram, :spotify, :soundcloud, :categoria)'
         );
 
         $stmt->execute([
-            'nome_artista' => htmlspecialchars($data['nome_artista'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            'alias' => htmlspecialchars($data['alias'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            'provincia' => htmlspecialchars($data['provincia'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'nome_artista' => $data['nome_artista'],
+            'alias' => $data['alias'] !== '' ? $data['alias'] : null,
+            'provincia' => $data['provincia'] !== '' ? $data['provincia'] : null,
             'instagram' => $data['instagram'],
-            'spotify' => $data['spotify'],
-			'soundcloud' => $data['soundcloud'],
-			'categoria' => htmlspecialchars($data['categoria'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'spotify' => $data['spotify'] !== '' ? $data['spotify'] : null,
+            'soundcloud' => $data['soundcloud'] !== '' ? $data['soundcloud'] : null,
+            'categoria' => $data['categoria'],
         ]);
 
-        return (int)$this->connection->lastInsertId();
+        return (int) $this->connection->lastInsertId();
     }
 }

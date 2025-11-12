@@ -446,7 +446,7 @@ document.addEventListener('keydown', event => {
   }
 });
 
-suggestionForm?.addEventListener('submit', event => {
+suggestionForm?.addEventListener('submit', async event => {
   event.preventDefault();
 
   if (!suggestionForm.reportValidity()) {
@@ -454,16 +454,52 @@ suggestionForm?.addEventListener('submit', event => {
     return;
   }
 
+  const formData = new FormData(suggestionForm);
+  const links = suggestionForm.querySelectorAll('input[name="links"]');
+
+  const payload = {
+    nome_artista: formData.get('artist_name')?.toString().trim() || '',
+    alias: formData.get('artist_alias')?.toString().trim() || '',
+    provincia: formData.get('location')?.toString().trim() || '',
+    categoria: formData.get('category')?.toString().trim() || '',
+    instagram: links[0]?.value?.trim() || '',
+    spotify: links[1]?.value?.trim() || '',
+    soundcloud: links[2]?.value?.trim() || ''
+  };
+
   setFormFeedback(suggestionFeedback, 'Invio in corso...', 'info');
 
-  setTimeout(() => {
+  try {
+    const response = await fetch('../controller/SuggestionsController.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      const errorMessage = Array.isArray(result.errors) && result.errors.length > 0
+        ? result.errors.join('\n')
+        : 'Impossibile inviare il suggerimento.';
+
+      setFormFeedback(suggestionFeedback, errorMessage, 'error');
+      showGlobalNotification(errorMessage, 'warning');
+      return;
+    }
+
     setFormFeedback(suggestionFeedback, 'Suggerimento inviato con successo ✅');
     showGlobalNotification('Suggerimento inviato con successo ✅');
     suggestionForm.reset();
     setTimeout(() => {
       closeSuggestionForm();
     }, 900);
-  }, 850);
+  } catch (error) {
+    setFormFeedback(suggestionFeedback, 'Si è verificato un errore inatteso. Riprova più tardi.', 'error');
+    showGlobalNotification('Si è verificato un errore inatteso. Riprova più tardi.', 'warning');
+  }
 });
 
 artistCardForm?.addEventListener('submit', event => {
