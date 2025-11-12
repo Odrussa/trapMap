@@ -14,8 +14,8 @@ class SuggestionRepository
     public function create(array $data): int
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO suggestions (nome_artista, alias, provincia, instagram, spotify, soundcloud, categoria)
-             VALUES (:nome_artista, :alias, :provincia, :instagram, :spotify, :soundcloud, :categoria)'
+            'INSERT INTO suggestions (nome_artista, alias, provincia, instagram, spotify, soundcloud, categoria, id_user)
+             VALUES (:nome_artista, :alias, :provincia, :instagram, :spotify, :soundcloud, :categoria, :id_user)'
         );
 
         $stmt->execute([
@@ -26,6 +26,7 @@ class SuggestionRepository
             'spotify' => $data['spotify'] !== '' ? $data['spotify'] : null,
             'soundcloud' => $data['soundcloud'] !== '' ? $data['soundcloud'] : null,
             'categoria' => $data['categoria'],
+			'id_user' => $data['id_user'],
         ]);
 
         return (int) $this->connection->lastInsertId();
