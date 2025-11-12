@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrapMap</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header>
+  <div class="logo">TrapMap 🇮🇹</div>
+   <div class="menu-toggle" id="menu-toggle"></div>
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#map">Mappa</a></li>
+      <li><a href="#">Artisti</a></li>
+      <li><a href="#">Crew</a></li>
+      <li><a href="#">About</a></li>
+	  <li><a href="#" onclick="openLogin()">Login</a></li>
+	  <li><a href="#" onclick="openRegister()">Registrati</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div id="profilePanelBackdrop" class="profile-panel-backdrop hidden" aria-hidden="true"></div>
+<aside id="profilePanel" class="profile-panel" aria-hidden="true" aria-labelledby="profilePanelTitle">
+  <div class="profile-panel-header">
+    <h2 id="profilePanelTitle">Pannello personale</h2>
+    <button type="button" class="close-profile" id="closeProfilePanel" aria-label="Chiudi pannello personale">&times;</button>
+  </div>
+  <div class="profile-panel-body">
+    <p class="profile-panel-username" id="profileUsername"></p>
+    <ul class="profile-panel-actions" role="menu">
+      <li><button type="button" id="profileActionSuggest" class="profile-action" role="menuitem">Invia un suggerimento</button></li>
+      <li><button type="button" id="profileActionMySuggestions" class="profile-action" role="menuitem">I miei suggerimenti</button></li>
+      <li><button type="button" id="profileActionLogout" class="profile-action profile-action-logout" role="menuitem">Logout</button></li>
+    </ul>
+  </div>
+</aside>
+
+<section class="hero">
+  <h1>Mappa dell'underground italiano</h1>
+  <p>Scopri la scena rap underground delle città italiane </p>
+  <a href="#map" class="btn-primary hero-btn">Vai alla Mappa</a>
+</section>
+
+ <!-- Tooltip globale per nome provincia cursore-->
+ <div id="tooltip" class="tooltip"></div>
+
+<section id="map" class="map-section">
+  <h2>La Mappa</h2>
+  <div class="italy-map-container">
+     <div id="map-container" aria-live="polite" role="img" aria-label="Mappa delle province italiane"></div>
+  </div>
+  <div class="map-cta" aria-label="Azioni rapide">
+    <button type="button" class="cta-button" id="suggestArtistCta">Suggerisci un artista</button>
+    <button type="button" class="cta-button" id="createArtistCardCta">Crea la tua artist card</button>
+  </div>
+</section>
+
+<!-- ---------------- FORM SUGGERIMENTO ---------------- -->
+<div id="suggestionModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="suggestionTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="suggestionTitle">Suggerisci un artista</h2>
+      <button type="button" class="close-overlay" id="closeSuggestionForm" aria-label="Chiudi il form suggerimento">&times;</button>
+    </div>
+    <form id="suggestionForm" class="modal-form" novalidate>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="suggestArtistName">Nome artista suggerito *</label>
+          <input type="text" id="suggestArtistName" name="artist_name" required>
+        </div>
+        <div class="form-field">
+          <label for="suggestLocation">Provincia </label>
+          <select id="suggestLocation" name="location">
+            <option value="">Non specificato</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="suggestCategory">Categoria *</label>
+          <select id="suggestCategory" name="category" required>
+            <option value="">Seleziona</option>
+            <option value="rapper">Rapper</option>
+            <option value="producer">Producer</option>
+            <option value="both">Rapper / Producer</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="instagram">Link Instagram *</label>
+          <input type="url" id="instagram" name="links" placeholder="https://" required>
+        </div>
+		 <div class="form-field">
+          <label for="suggestLinks">Link Spotify </label>
+          <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
+        </div>
+		 <div class="form-field">
+          <label for="suggestLinks">Link Soundcloud </label>
+          <input type="url" id="suggestLinks" name="links" placeholder="https://" required>
+        </div>
+      </div>
+      <div class="form-feedback" id="suggestionFeedback" role="status" aria-live="polite"></div>
+      <button type="submit" class="btn-primary submit-button">Invia suggerimento</button>
+    </form>
+  </div>
+</div>
+
+<!-- ---------------- FORM ARTIST CARD ---------------- -->
+<div id="artistCardModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="artistCardTitle">
+  <div class="modal-content wide">
+    <div class="modal-header">
+      <h2 id="artistCardTitle">Crea la tua artist card</h2>
+      <button type="button" class="close-overlay" id="closeArtistCardForm" aria-label="Chiudi il form artist card">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="artistCardForm" class="modal-form" enctype="multipart/form-data" novalidate>
+        <div class="form-grid two-columns">
+          <div class="form-field">
+            <label for="artistName">Nome artista *</label>
+            <input type="text" id="artistName" name="artist_name" required>
+          </div>
+          <div class="form-field">
+            <label for="artistAlias">Alias *</label>
+            <input type="text" id="artistAlias" name="artist_alias" required>
+          </div>
+          <div class="form-field">
+            <label for="artistProvince">Provincia *</label>
+            <select id="artistProvince" name="province" data-populate="province" required>
+              <option value="">Seleziona provincia</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="artistRegion">Regione *</label>
+            <select id="artistRegion" name="region" data-populate="region" required>
+              <option value="">Seleziona regione</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="artistCategory">Categoria *</label>
+            <select id="artistCategory" name="category" required>
+              <option value="">Seleziona</option>
+              <option value="rapper">Rapper</option>
+              <option value="producer">Producer</option>
+              <option value="both">Entrambi</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="artistSpotify">Link Spotify</label>
+            <input type="url" id="artistSpotify" name="spotify" placeholder="https://open.spotify.com/">
+          </div>
+          <div class="form-field">
+            <label for="artistInstagram">Link Instagram</label>
+            <input type="url" id="artistInstagram" name="instagram" placeholder="https://www.instagram.com/">
+          </div>
+          <div class="form-field">
+            <label for="artistSoundcloud">Link SoundCloud</label>
+            <input type="url" id="artistSoundcloud" name="soundcloud" placeholder="https://soundcloud.com/">
+          </div>
+          <div class="form-field form-field-full">
+            <label for="artistImage">Upload immagine</label>
+            <input type="file" id="artistImage" name="image" accept="image/*">
+          </div>
+        </div>
+        <div class="form-feedback" id="artistCardFeedback" role="status" aria-live="polite"></div>
+        <button type="submit" class="btn-primary submit-button" id="artistCardSubmit">Pubblica la mia artist card</button>
+      </form>
+      <aside class="artist-card-preview" aria-live="polite" aria-label="Anteprima live della artist card">
+        <div class="artist-preview-card">
+          <div class="artist-preview-image" id="artistPreviewImageContainer">
+            <img id="artistPreviewImage" alt="Anteprima immagine artista" hidden>
+            <span class="artist-preview-placeholder">Carica un'immagine per la tua card</span>
+          </div>
+          <div class="artist-preview-body">
+            <h3 id="artistPreviewName">Nome artista</h3>
+            <p id="artistPreviewAlias">@alias</p>
+            <p id="artistPreviewLocation" class="artist-preview-meta">Provincia • Regione</p>
+            <p id="artistPreviewCategory" class="artist-preview-category">Categoria</p>
+            <ul id="artistPreviewLinks" class="artist-preview-links"></ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- POPUP LOGIN ---------------- -->
+<div id="loginPopup" class="overlay hidden">
+  <div class="overlay-content">
+    <span id="closeLogin" class="close-overlay">&times;</span>
+    <h2>Accedi</h2>
+    <form id="loginForm">
+		<!-- Contenitore per messaggi di errore -->
+		<div id="loginErrors" style="color: #ff39f0; margin-bottom: 10px;"></div>
+	
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit" class="btn-primary">Accedi</button>
+    </form>
+    <p>Non hai un account? <a href="#" id="showRegister">Registrati</a></p>
+  </div>
+</div>
+
+<!-- ---------------- POPUP REGISTRAZIONE ---------------- -->
+<div id="registerPopup" class="overlay hidden">
+  <div class="overlay-content">
+    <span id="closeRegister" class="close-overlay">&times;</span>
+    <h2>Registrati</h2>
+		<!-- Contenitore per messaggi di errore -->
+        <div id="registerErrors" style="color: #ff39f0; margin-bottom: 10px;"></div>
+		
+    <form id="registerForm">
+      <input type="text" name="nome" placeholder="Nome" required>
+      <input type="text" name="cognome" placeholder="Cognome" required>
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirm_password" placeholder="Conferma Password" required>
+      <button type="submit" class="btn-primary">Registrati</button>
+    </form>
+    <p>Hai già un account? <a href="#" id="showLogin">Accedi</a></p>
+  </div>
+</div>
+
+
+<footer>
+  <p>© 2025 TrapMap - Progetto indipendente</p>
+  <div class="socials">
+    <a href="#">IG</a>
+    <a href="#">TikTok</a>
+    <a href="#">YouTube</a>
+  </div>
+</footer>
+
+<div id="globalNotification" class="global-notification hidden" role="status" aria-live="polite"></div>
+
+<!-- LINK JS -->
+<script src="assets/js/script.js"></script>
+</body>
+</html>
