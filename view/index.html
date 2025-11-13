@@ -127,19 +127,13 @@
             <input type="text" id="artistName" name="artist_name" required>
           </div>
           <div class="form-field">
-            <label for="artistAlias">Alias *</label>
-            <input type="text" id="artistAlias" name="artist_alias" required>
+            <label for="artistAlias">Alias <span class="optional-label">(opzionale)</span></label>
+            <input type="text" id="artistAlias" name="artist_alias" placeholder="Es. @nickname">
           </div>
           <div class="form-field">
             <label for="artistProvince">Provincia *</label>
             <select id="artistProvince" name="province" data-populate="province" required>
               <option value="">Seleziona provincia</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label for="artistRegion">Regione *</label>
-            <select id="artistRegion" name="region" data-populate="region" required>
-              <option value="">Seleziona regione</option>
             </select>
           </div>
           <div class="form-field">
@@ -152,25 +146,24 @@
             </select>
           </div>
           <div class="form-field">
-            <label for="artistSpotify">Link Spotify</label>
+            <label for="artistInstagram">Link Instagram *</label>
+            <input type="url" id="artistInstagram" name="instagram" placeholder="https://www.instagram.com/" required>
+          </div>
+          <div class="form-field">
+            <label for="artistSpotify">Link Spotify <span class="optional-label">(opzionale)</span></label>
             <input type="url" id="artistSpotify" name="spotify" placeholder="https://open.spotify.com/">
           </div>
-
           <div class="form-field">
-            <label for="artistInstagram">Link Instagram</label>
-            <input type="url" id="artistInstagram" name="instagram" placeholder="https://www.instagram.com/">
-          </div>
-          <div class="form-field">
-            <label for="artistSoundcloud">Link SoundCloud</label>
+            <label for="artistSoundcloud">Link SoundCloud <span class="optional-label">(opzionale)</span></label>
             <input type="url" id="artistSoundcloud" name="soundcloud" placeholder="https://soundcloud.com/">
           </div>
           <div class="form-field form-field-full">
-            <label for="artistImage">Upload immagine</label>
-            <input type="file" id="artistImage" name="image" accept="image/*">
+            <label for="artistImage">Immagine card *</label>
+            <input type="file" id="artistImage" name="image" accept="image/*" required>
           </div>
         </div>
         <div class="form-feedback" id="artistCardFeedback" role="status" aria-live="polite"></div>
-        <button type="submit" class="btn-primary submit-button" id="artistCardSubmit">Pubblica la mia artist card</button>
+        <button type="submit" class="btn-primary submit-button" id="artistCardSubmit">Crea la mia artist card</button>
       </form>
       <aside class="artist-card-preview" aria-live="polite" aria-label="Anteprima live della artist card">
         <div class="artist-preview-card">
@@ -181,7 +174,7 @@
           <div class="artist-preview-body">
             <h3 id="artistPreviewName">Nome artista</h3>
             <p id="artistPreviewAlias">@alias</p>
-            <p id="artistPreviewLocation" class="artist-preview-meta">Provincia • Regione</p>
+            <p id="artistPreviewLocation" class="artist-preview-meta">Provincia</p>
             <p id="artistPreviewCategory" class="artist-preview-category">Categoria</p>
             <ul id="artistPreviewLinks" class="artist-preview-links"></ul>
           </div>
