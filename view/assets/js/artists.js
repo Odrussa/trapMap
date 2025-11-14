@@ -23,39 +23,14 @@ class ArtistCardFactory {
   }
 
   static createStandardCard(artist) {
-    const card = document.createElement('div');
-    card.classList.add('artist-card');
-
-    const image = document.createElement('img');
-    image.src = artist.immagine || 'default.jpg';
-    image.alt = artist.nome;
-    card.appendChild(image);
-
-    const title = document.createElement('h3');
-    title.textContent = artist.nome;
-    card.appendChild(title);
-
-    const alias = document.createElement('p');
-    alias.innerHTML = `<strong>Alias:</strong> ${artist.alias || '—'}`;
-    card.appendChild(alias);
-
-    const provinceInfo = document.createElement('p');
-    provinceInfo.innerHTML = `<strong>Provincia:</strong> ${artist.provincia}`;
-    card.appendChild(provinceInfo);
-	
-	// 🔹 Aggiungiamo la categoria
-  const categoryInfo = document.createElement('p');
-  categoryInfo.innerHTML = `<strong>Categoria:</strong> ${artist.categorie || '—'}`;
-  card.appendChild(categoryInfo);
-
-    const socials = document.createElement('div');
-    socials.classList.add('social-links');
-    this.appendSocialLink(socials, artist.spotify, 'Spotify');
-    this.appendSocialLink(socials, artist.soundcloud, 'SoundCloud');
-    this.appendSocialLink(socials, artist.instagram, 'Instagram');
-    card.appendChild(socials);
-
-    return card;
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('artist-card');
+    const core = this.createCardCore(artist, {
+      placeholderText: 'Immagine non disponibile',
+      linksAsAnchors: true
+    });
+    wrapper.appendChild(core);
+    return wrapper;
   }
 
   static createHighlightCard(artist) {
@@ -64,17 +39,119 @@ class ArtistCardFactory {
     return card;
   }
 
-  static appendSocialLink(wrapper, url, label) {
-    if (!url) {
-      return;
+  static createPreviewCard(artist = {}) {
+    const preview = document.createElement('div');
+    preview.classList.add('artist-preview');
+    const core = this.createCardCore(artist, {
+      placeholderText: "Carica un'immagine per la tua card",
+      linksAsAnchors: false
+    });
+    preview.appendChild(core);
+    return preview;
+  }
+
+  static createCardCore(artist = {}, options = {}) {
+    const {
+      placeholderText = 'Immagine non disponibile',
+      fallbackImage = null,
+      linksAsAnchors = true
+    } = options;
+
+    const core = document.createElement('div');
+    core.classList.add('artist-card-core');
+
+    const imageWrapper = document.createElement('div');
+    imageWrapper.classList.add('artist-card-image');
+
+    const image = document.createElement('img');
+    image.alt = artist.nome || 'Artista TrapMap';
+
+    const imageSource = artist.immagine || fallbackImage;
+    if (imageSource) {
+      image.src = imageSource;
+      imageWrapper.classList.add('has-image');
+    } else {
+      image.hidden = true;
     }
 
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.textContent = label;
-    wrapper.appendChild(link);
+    const placeholder = document.createElement('span');
+    placeholder.classList.add('artist-card-placeholder');
+    placeholder.textContent = placeholderText;
+
+    imageWrapper.appendChild(image);
+    imageWrapper.appendChild(placeholder);
+    core.appendChild(imageWrapper);
+
+    const body = document.createElement('div');
+    body.classList.add('artist-card-body');
+
+    const title = document.createElement('h3');
+    title.classList.add('artist-card-title');
+    title.textContent = artist.nome || 'Nome artista';
+    body.appendChild(title);
+
+    const aliasValue = typeof artist.alias === 'string' ? artist.alias.trim().replace(/^@+/, '') : '';
+    const alias = document.createElement('p');
+    alias.classList.add('artist-card-meta');
+    alias.textContent = aliasValue ? `@${aliasValue}` : '@alias';
+    body.appendChild(alias);
+
+    const locationParts = [];
+    if (artist.provincia) {
+      locationParts.push(artist.provincia);
+    }
+    if (artist.regione) {
+      locationParts.push(artist.regione);
+    }
+    const locationText = locationParts.length > 0 ? locationParts.join(' • ') : 'Provincia non disponibile';
+
+    const provinceInfo = document.createElement('p');
+    provinceInfo.classList.add('artist-card-meta');
+    provinceInfo.textContent = locationText;
+    body.appendChild(provinceInfo);
+
+    const categoryValue = Array.isArray(artist.categorie)
+      ? artist.categorie.filter(Boolean).join(' • ')
+      : artist.categorie;
+    const categoryInfo = document.createElement('p');
+    categoryInfo.classList.add('artist-card-category');
+    categoryInfo.textContent = categoryValue || 'Categoria';
+    body.appendChild(categoryInfo);
+
+    const linksWrapper = document.createElement('div');
+    linksWrapper.classList.add('artist-card-links');
+
+    const links = [
+      { url: artist.spotify, label: 'Spotify' },
+      { url: artist.soundcloud, label: 'SoundCloud' },
+      { url: artist.instagram, label: 'Instagram' }
+    ];
+
+    links.forEach(link => {
+      if (!link.url) {
+        return;
+      }
+
+      if (linksAsAnchors) {
+        const anchor = document.createElement('a');
+        anchor.classList.add('artist-card-link');
+        anchor.href = link.url;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        anchor.textContent = link.label;
+        linksWrapper.appendChild(anchor);
+      } else {
+        const chip = document.createElement('span');
+        chip.classList.add('artist-card-link');
+        chip.textContent = link.label;
+        linksWrapper.appendChild(chip);
+      }
+    });
+
+    body.appendChild(linksWrapper);
+    core.appendChild(body);
+
+    return core;
   }
 }
 

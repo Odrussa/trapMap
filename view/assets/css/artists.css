@@ -59,16 +59,14 @@ h1#page-title {
 
 /* Card artista */
 .artist-card {
-    background-color: #222;
     border: 2px solid #39ff14;
-    border-radius: 12px;
-    padding: 15px;
+    border-radius: 14px;
     width: 100%;
-    max-width: 220px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 240px;
+    padding: 6px;
     transition: transform 0.3s, box-shadow 0.3s;
+    background: transparent;
+    display: flex;
 }
 
 .artist-card:hover {
@@ -76,34 +74,122 @@ h1#page-title {
     box-shadow: 0 0 20px #ff39f0;
 }
 
-.artist-card img {
-    width: 100%;
-    height: auto;
+.artist-card .artist-card-core {
+    height: 100%;
+}
+
+/* Core condiviso della card */
+.artist-card-core {
+    background-color: #222;
     border-radius: 10px;
-    margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    text-align: left;
+    color: #ffffff;
 }
 
-.artist-card h3 {
-    margin: 10px 0 5px;
+.artist-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.artist-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.artist-card-placeholder {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9e9e9e;
+    text-align: center;
+    padding: 0 16px;
+}
+
+.artist-card-image.has-image .artist-card-placeholder,
+.artist-card-image img[hidden] {
+    display: none !important;
+}
+
+.artist-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.artist-card-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.95rem;
     color: #ff39f0;
+    line-height: 1.3;
 }
 
-.artist-card p {
-    margin: 5px 0;
-    color: #39ff14;
-    font-size: 0.9rem;
+.artist-card-meta {
+    font-size: 0.75rem;
+    color: #cfcfcf;
+    letter-spacing: 0.03em;
 }
 
-.artist-card a {
+.artist-card-category {
+    display: inline-flex;
+    align-self: flex-start;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ff39f0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 57, 240, 0.12);
+    border: 1px solid rgba(255, 57, 240, 0.35);
+}
+
+.artist-card-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+    list-style: none;
+    padding: 0;
+    align-items: center;
+}
+
+.artist-card .artist-card-links:empty {
+    display: none;
+}
+
+.artist-card-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 57, 240, 0.45);
+    background: rgba(255, 57, 240, 0.12);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: #ff39f0;
     text-decoration: none;
-    margin-top: 5px;
-    font-weight: bold;
-    transition: color 0.2s;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.artist-card a:hover {
+.artist-card-link:hover {
     color: #39ff14;
+    border-color: rgba(57, 255, 20, 0.6);
+    background: rgba(57, 255, 20, 0.12);
 }
 
 /* Footer */

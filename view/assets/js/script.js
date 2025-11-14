@@ -573,9 +573,10 @@ function refreshArtistPreview() {
     .map(item => ({ value: item.input?.value.trim(), label: item.label }))
     .filter(item => item.value)
     .forEach(item => {
-      const listItem = document.createElement('li');
-      listItem.textContent = item.label;
-      artistPreviewLinks.appendChild(listItem);
+      const chip = document.createElement('span');
+      chip.className = 'artist-card-link';
+      chip.textContent = item.label;
+      artistPreviewLinks.appendChild(chip);
     });
 }
 
