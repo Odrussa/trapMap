@@ -49,6 +49,20 @@ header .logo {
     color: var(--neon-green);
 }
 
+.back-button {
+    color: var(--neon-green);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color var(--transition-base), text-shadow var(--transition-base);
+}
+
+.back-button:hover,
+.back-button:focus {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--neon-pink);
+    outline: none;
+}
+
 nav {
     position: relative;
     display: flex;
@@ -549,7 +563,8 @@ nav ul li a:focus {
     align-items: center;
 }
 
-.artist-preview-card {
+.artist-preview-card,
+.artist-card-core {
     width: 100%;
     max-width: 320px;
     background: #050505;
@@ -557,9 +572,16 @@ nav ul li a:focus {
     overflow: hidden;
     border: 2px solid var(--neon-green);
     box-shadow: 0 0 22px rgba(57, 255, 20, 0.35);
+    display: flex;
+    flex-direction: column;
 }
 
-.artist-preview-image {
+.artist-card-core {
+    height: 100%;
+}
+
+.artist-preview-image,
+.artist-card-image {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -574,7 +596,8 @@ nav ul li a:focus {
     display: none;
 }
 
-.artist-preview-image img {
+.artist-preview-image img,
+.artist-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -593,36 +616,46 @@ nav ul li a:focus {
     padding: 0 20px;
 }
 
-.artist-preview-body {
+.artist-preview-body,
+.artist-card-body {
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.artist-preview-body h3 {
+.artist-preview-body h3,
+.artist-card-body h3 {
     font-family: 'Press Start 2P', cursive;
     font-size: 1rem;
     color: var(--neon-green);
     text-shadow: 0 0 10px var(--neon-green);
 }
 
-.artist-preview-meta {
+.artist-preview-meta,
+.artist-card-meta {
     font-size: 0.8rem;
     color: var(--text-muted);
+    /*font-style: italic;*/
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
 }
 
-.artist-preview-category {
+.artist-preview-category,
+.artist-card-category {
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--neon-pink);
 }
 
-.artist-preview-links {
+.artist-preview-links,
+.artist-card-links {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin: 0;
+    padding: 0;
 }
 
 .artist-preview-links:empty::before {
@@ -633,7 +666,8 @@ nav ul li a:focus {
     color: var(--text-muted);
 }
 
-.artist-preview-links li {
+.artist-preview-links li,
+.artist-card-links li {
     padding: 6px 10px;
     border-radius: 999px;
     border: 1px solid rgba(255, 57, 240, 0.35);

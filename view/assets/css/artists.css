@@ -1,60 +1,12 @@
-/* Reset base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ---------------- ARTISTS PAGE SPECIFICS ---------------- */
 
-:root {
-    --neon-green: #39ff14;
-    --neon-pink: #ff39f0;
-    --text-muted: #9aa0b2;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #0a0a0a;
-    color: #ffffff;
-    line-height: 1.5;
-}
-
-/* Navbar */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background-color: #050505;
-    border-bottom: 2px solid #39ff14;
-}
-
-header .logo {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 1.5rem;
-    color: #39ff14;
-}
-
-.back-button {
-    color: #39ff14;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.back-button:hover {
-    color: #ff39f0;
-    text-shadow: 0 0 10px #ff39f0;
-}
-
-/* Titolo pagina artisti */
 h1#page-title {
     text-align: center;
-    color: #ff39f0;
+    color: var(--neon-pink);
     margin: 30px 0;
     font-family: 'Press Start 2P', cursive;
 }
 
-/* Griglia card */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -63,7 +15,6 @@ h1#page-title {
     padding: 0 40px 40px 40px;
 }
 
-/* Card artista */
 .artist-card {
     width: 100%;
     max-width: 320px;
@@ -71,14 +22,6 @@ h1#page-title {
 }
 
 .artist-card-core {
-    background: #050505;
-    border-radius: 18px;
-    border: 2px solid var(--neon-green);
-    box-shadow: 0 0 22px rgba(57, 255, 20, 0.25);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: 100%;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -87,74 +30,11 @@ h1#page-title {
     box-shadow: 0 0 28px rgba(255, 57, 240, 0.35);
 }
 
-.artist-card-image {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: radial-gradient(circle at 30% 30%, rgba(57, 255, 20, 0.35), transparent 70%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.artist-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.artist-card-body {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.artist-card-body h3 {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 1rem;
-    color: var(--neon-green);
-    text-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
-}
-
 .artist-card-alias {
     font-size: 0.85rem;
-    color: #ffffff;
+    color: var(--text-primary);
     letter-spacing: 0.05em;
     text-transform: uppercase;
-}
-
-.artist-card-meta {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.artist-card-category {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--neon-pink);
-}
-
-.artist-card-links {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-}
-
-.artist-card-links li {
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 57, 240, 0.35);
-    background: rgba(255, 57, 240, 0.12);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.7rem;
 }
 
 .artist-card-links a {
@@ -163,38 +43,16 @@ h1#page-title {
     font-weight: 600;
 }
 
-.artist-card-links a:hover {
+.artist-card-links a:hover,
+.artist-card-links a:focus {
     color: var(--neon-green);
 }
 
-/* Footer */
 footer {
-    padding: 30px 40px;
-    background-color: #050505;
-    border-top: 2px solid #39ff14;
-    text-align: center;
+    margin-top: 40px;
 }
 
-footer .socials a {
-    margin: 0 10px;
-    color: #ffffff;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-footer .socials a:hover {
-    color: #ff39f0;
-    text-shadow: 0 0 10px #ff39f0;
-}
-
-/* Responsive: smartphone e tablet */
 @media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
     .cards-container {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         padding: 0 20px 20px 20px;
