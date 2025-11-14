@@ -172,18 +172,18 @@
         <div class="form-feedback" id="artistCardFeedback" role="status" aria-live="polite"></div>
         <button type="submit" class="btn-primary submit-button" id="artistCardSubmit">Pubblica la mia artist card</button>
       </form>
-      <aside class="artist-card-preview" aria-live="polite" aria-label="Anteprima live della artist card">
-        <div class="artist-preview-card">
-          <div class="artist-preview-image" id="artistPreviewImageContainer">
+      <aside class="artist-preview" aria-live="polite" aria-label="Anteprima live della artist card">
+        <div class="artist-card-core">
+          <div class="artist-card-image" id="artistPreviewImageContainer">
             <img id="artistPreviewImage" alt="Anteprima immagine artista" hidden>
-            <span class="artist-preview-placeholder">Carica un'immagine per la tua card</span>
+            <span class="artist-card-placeholder">Carica un'immagine per la tua card</span>
           </div>
-          <div class="artist-preview-body">
-            <h3 id="artistPreviewName">Nome artista</h3>
-            <p id="artistPreviewAlias">@alias</p>
-            <p id="artistPreviewLocation" class="artist-preview-meta">Provincia • Regione</p>
-            <p id="artistPreviewCategory" class="artist-preview-category">Categoria</p>
-            <ul id="artistPreviewLinks" class="artist-preview-links"></ul>
+          <div class="artist-card-body">
+            <h3 id="artistPreviewName" class="artist-card-title">Nome artista</h3>
+            <p id="artistPreviewAlias" class="artist-card-meta">@alias</p>
+            <p id="artistPreviewLocation" class="artist-card-meta">Provincia • Regione</p>
+            <p id="artistPreviewCategory" class="artist-card-category">Categoria</p>
+            <div id="artistPreviewLinks" class="artist-card-links"></div>
           </div>
         </div>
       </aside>
