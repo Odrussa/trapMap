@@ -24,14 +24,18 @@ if ($userId === null) {
     exit;
 }
 
+// ---------------------------------------------------
+// 1. Validazione dei dati di input
+// ---------------------------------------------------
+
 $input = [
     'nome_artista' => trim($_POST['artist_name'] ?? ''),
-    'alias' => trim($_POST['artist_alias'] ?? ''),
-    'provincia' => trim($_POST['province'] ?? ''),
-    'categoria' => trim($_POST['category'] ?? ''),
-    'instagram' => trim($_POST['instagram'] ?? ''),
-    'spotify' => trim($_POST['spotify'] ?? ''),
-    'soundcloud' => trim($_POST['soundcloud'] ?? '')
+    'alias'        => trim($_POST['artist_alias'] ?? ''),
+    'provincia'    => trim($_POST['province'] ?? ''),
+    'categoria'    => trim($_POST['category'] ?? ''), // ID categoria
+    'instagram'    => trim($_POST['instagram'] ?? ''),
+    'spotify'      => trim($_POST['spotify'] ?? ''),
+    'soundcloud'   => trim($_POST['soundcloud'] ?? '')
 ];
 
 $errors = [];
@@ -60,6 +64,10 @@ foreach (['spotify' => 'Spotify', 'soundcloud' => 'SoundCloud'] as $field => $la
     }
 }
 
+// ---------------------------------------------------
+// 2. Gestione immagine upload
+// ---------------------------------------------------
+
 $uploadedImage = $_FILES['image'] ?? null;
 
 if (!$uploadedImage || $uploadedImage['error'] === UPLOAD_ERR_NO_FILE) {
@@ -77,35 +85,17 @@ if ($errors) {
     exit;
 }
 
-$database = Database::getInstance()->getConnection();
-$repository = new ArtistCardRequestRepository($database);
-
-try {
-    if ($repository->userHasCard((int) $userId)) {
-        http_response_code(409);
-        echo json_encode([
-            'success' => false,
-            'message' => 'Hai già inviato una artist card.'
-        ]);
-        exit;
-    }
-} catch (Throwable $exception) {
-    error_log('Artist card lookup error: ' . $exception->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'errors' => ['Errore durante la verifica delle artist card esistenti.']
-    ]);
-    exit;
-}
+// ---------------------------------------------------
+// 3. Controllo MIME type
+// ---------------------------------------------------
 
 $finfo = new finfo(FILEINFO_MIME_TYPE);
 $mimeType = $finfo->file($uploadedImage['tmp_name']);
 $allowedMimeTypes = [
     'image/jpeg' => 'jpg',
-    'image/png' => 'png',
+    'image/png'  => 'png',
     'image/webp' => 'webp',
-    'image/gif' => 'gif'
+    'image/gif'  => 'gif'
 ];
 
 if (!is_string($mimeType) || !isset($allowedMimeTypes[$mimeType])) {
@@ -153,25 +143,58 @@ if (!move_uploaded_file($uploadedImage['tmp_name'], $destinationPath)) {
 
 $imageRelativePath = 'assets/uploads/artist_cards/' . $fileName;
 
+// ---------------------------------------------------
+// 4. Verifica se l'utente è già artista
+// ---------------------------------------------------
+
+$database   = Database::getInstance()->getConnection();
+$repository = new ArtistCardRequestRepository($database);
+
+try {
+    if ($repository->userHasCard((int) $userId)) {
+        http_response_code(409);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Sei già artista, non puoi inviare una nuova artist card.'
+        ]);
+        exit;
+    }
+} catch (Throwable $exception) {
+
+    if (is_file($destinationPath)) unlink($destinationPath);
+
+    error_log('Artist card lookup error: ' . $exception->getMessage());
+
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'errors' => ['Errore durante la verifica del tuo stato artista.']
+    ]);
+    exit;
+}
+
+// ---------------------------------------------------
+// 5. Creazione della card
+// ---------------------------------------------------
+
 try {
     $cardId = $repository->create([
-        'user_id' => (int) $userId,
+        'id_artist'    => $userId,
         'nome_artista' => $input['nome_artista'],
-        'alias' => $input['alias'],
-        'provincia' => $input['provincia'],
-        'categoria' => $input['categoria'],
-        'instagram' => $input['instagram'],
-        'spotify' => $input['spotify'],
-        'soundcloud' => $input['soundcloud'],
-        'image_path' => $imageRelativePath,
-        'stato' => 'pending'
+        'alias'        => $input['alias'],
+        'provincia'    => $input['provincia'],
+        'instagram'    => $input['instagram'],
+        'spotify'      => $input['spotify'],
+        'soundcloud'   => $input['soundcloud'],
+        'foto'         => $imageRelativePath,
+        'stato'        => 'pending'
     ]);
 } catch (Throwable $exception) {
-    if (is_file($destinationPath)) {
-        unlink($destinationPath);
-    }
+
+    if (is_file($destinationPath)) unlink($destinationPath);
 
     error_log('Artist card creation error: ' . $exception->getMessage());
+
     http_response_code(500);
     echo json_encode([
         'success' => false,
@@ -180,11 +203,38 @@ try {
     exit;
 }
 
-$message = 'La tua artist card è stata creata! Il team la esaminerà a breve.';
+// ---------------------------------------------------
+// 6. Salvataggio categoria nella pivot 
+// ---------------------------------------------------
+
+try {
+    if (!empty($input['categoria'])) {
+
+        $stmt = $database->prepare(
+            'INSERT INTO artist_categories (artist_id, category_id)
+             VALUES (:artist_id, :category_id)'
+        );
+
+        $stmt->execute([
+            'artist_id'   => $cardId, // ID della card appena creata
+            'category_id' => (int) $input['categoria']
+        ]);
+    }
+} catch (Throwable $exception) {
+
+    error_log('Artist category save error: ' . $exception->getMessage());
+
+    // la card rimane salvata, ma categoria fallisce
+    // decidi tu se rollbackare o meno
+}
+
+// ---------------------------------------------------
+// 7. Risposta OK
+// ---------------------------------------------------
 
 echo json_encode([
-    'success' => true,
-    'message' => $message,
+    'success'        => true,
+    'message'        => 'La tua artist card è stata creata! Il team la esaminerà a breve.',
     'artist_card_id' => $cardId,
-    'image_path' => $imageRelativePath
+    'image_path'     => $imageRelativePath
 ]);

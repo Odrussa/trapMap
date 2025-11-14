@@ -14,69 +14,103 @@ document.getElementById('page-title').textContent = province
 class ArtistCardFactory {
   static createCard(type, artist) {
     switch (type) {
-      case 'highlight':
-        return this.createHighlightCard(artist);
-      case 'standard':
+      case "preview":
+        return this.createPreviewCard(artist);
+      case "standard":
       default:
         return this.createStandardCard(artist);
     }
   }
 
+  /* ===========================
+     CARD STANDARD (griglia)
+     =========================== */
   static createStandardCard(artist) {
-    const card = document.createElement('div');
-    card.classList.add('artist-card');
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("artist-card", "artist-card-core");
 
-    const image = document.createElement('img');
-    image.src = artist.immagine || 'default.jpg';
-    image.alt = artist.nome;
-    card.appendChild(image);
+    this.buildCardContent(wrapper, artist);
 
-    const title = document.createElement('h3');
-    title.textContent = artist.nome;
-    card.appendChild(title);
-
-    const alias = document.createElement('p');
-    alias.innerHTML = `<strong>Alias:</strong> ${artist.alias || '—'}`;
-    card.appendChild(alias);
-
-    const provinceInfo = document.createElement('p');
-    provinceInfo.innerHTML = `<strong>Provincia:</strong> ${artist.provincia}`;
-    card.appendChild(provinceInfo);
-	
-	// 🔹 Aggiungiamo la categoria
-  const categoryInfo = document.createElement('p');
-  categoryInfo.innerHTML = `<strong>Categoria:</strong> ${artist.categorie || '—'}`;
-  card.appendChild(categoryInfo);
-
-    const socials = document.createElement('div');
-    socials.classList.add('social-links');
-    this.appendSocialLink(socials, artist.spotify, 'Spotify');
-    this.appendSocialLink(socials, artist.soundcloud, 'SoundCloud');
-    this.appendSocialLink(socials, artist.instagram, 'Instagram');
-    card.appendChild(socials);
-
-    return card;
+    return wrapper;
   }
 
-  static createHighlightCard(artist) {
-    const card = this.createStandardCard(artist);
-    card.classList.add('artist-card--highlight');
-    return card;
+  /* ===========================
+     PREVIEW DEL FORM
+     =========================== */
+  static createPreviewCard(artist) {
+    const outer = document.createElement("div");
+    outer.classList.add("artist-preview");
+
+    const core = document.createElement("div");
+    core.classList.add("artist-card-core");
+
+    this.buildCardContent(core, artist);
+
+    outer.appendChild(core);
+    return outer;
+  }
+
+  /* ===========================
+     CONTENUTO DELLA CARD (CORE)
+     =========================== */
+  static buildCardContent(card, artist) {
+    /* ---- IMMAGINE ---- */
+    const imgWrapper = document.createElement("div");
+    imgWrapper.classList.add("artist-card-image");
+    const img = document.createElement("img");
+    img.src = artist.immagine || "default.jpg";
+    img.alt = artist.nome;
+    imgWrapper.appendChild(img);
+    card.appendChild(imgWrapper);
+
+    /* ---- BODY ---- */
+    const body = document.createElement("div");
+    body.classList.add("artist-card-body");
+
+    const title = document.createElement("h3");
+    title.textContent = artist.nome;
+    body.appendChild(title);
+
+    const meta = document.createElement("p");
+    meta.classList.add("artist-card-meta");
+    meta.textContent =
+      artist.alias
+        ? `${artist.alias} • ${artist.provincia}`
+        : artist.provincia;
+    body.appendChild(meta);
+
+    const category = document.createElement("p");
+    category.classList.add("artist-card-category");
+    category.textContent = artist.categorie || "—";
+    body.appendChild(category);
+
+    const links = document.createElement("ul");
+    links.classList.add("artist-card-links");
+
+    this.appendSocialLink(links, artist.spotify, "Spotify");
+    this.appendSocialLink(links, artist.soundcloud, "SoundCloud");
+    this.appendSocialLink(links, artist.instagram, "Instagram");
+
+    body.appendChild(links);
+
+    card.appendChild(body);
   }
 
   static appendSocialLink(wrapper, url, label) {
-    if (!url) {
-      return;
-    }
+    if (!url) return;
 
-    const link = document.createElement('a');
+    const li = document.createElement("li");
+    const link = document.createElement("a");
     link.href = url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
     link.textContent = label;
-    wrapper.appendChild(link);
+
+    li.appendChild(link);
+    wrapper.appendChild(li);
   }
 }
+
 
 fetch(`../controller/ArtistsController.php?province=${encodeURIComponent(province ?? '')}`)
   .then(res => {

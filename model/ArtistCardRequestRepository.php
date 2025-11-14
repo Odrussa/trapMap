@@ -1,7 +1,5 @@
 <?php
-/**
- * Gestisce la creazione delle richieste di artist card.
- */
+
 class ArtistCardRequestRepository
 {
     private \PDO $connection;
@@ -11,56 +9,64 @@ class ArtistCardRequestRepository
         $this->connection = $connection;
     }
 
+    /**
+     * Crea una nuova artist card (in stato pending).
+     * id_artist è NULL perché l'utente non è ancora artista.
+     */
     public function create(array $data): int
     {
         $statement = $this->connection->prepare(
-            'INSERT INTO artists_cards (
-                user_id,
+            'INSERT INTO artists_card (
+                id_artist,
                 nome_artista,
                 alias,
                 provincia,
-                categoria,
-                instagram,
                 spotify,
+                instagram,
                 soundcloud,
-                image_path,
+                foto,
                 stato
             ) VALUES (
-                :user_id,
+                :id_artist,
                 :nome_artista,
                 :alias,
                 :provincia,
-                :categoria,
-                :instagram,
                 :spotify,
+                :instagram,
                 :soundcloud,
-                :image_path,
+                :foto,
                 :stato
             )'
         );
 
         $statement->execute([
-            'user_id' => $data['user_id'],
+            'id_artist'    => $data['id_artist'],  // può essere null
             'nome_artista' => $data['nome_artista'],
-            'alias' => $data['alias'] !== '' ? $data['alias'] : null,
-            'provincia' => $data['provincia'],
-            'categoria' => $data['categoria'],
-            'instagram' => $data['instagram'],
-            'spotify' => $data['spotify'] !== '' ? $data['spotify'] : null,
-            'soundcloud' => $data['soundcloud'] !== '' ? $data['soundcloud'] : null,
-            'image_path' => $data['image_path'],
-            'stato' => $data['stato'] ?? 'pending',
+            'alias'        => $data['alias'] !== '' ? $data['alias'] : null,
+            'provincia'    => $data['provincia'],
+            'spotify'      => $data['spotify'] !== '' ? $data['spotify'] : null,
+            'instagram'    => $data['instagram'],
+            'soundcloud'   => $data['soundcloud'] !== '' ? $data['soundcloud'] : null,
+            'foto'         => $data['foto'],
+            'stato'        => $data['stato'] ?? 'pending',
         ]);
 
         return (int) $this->connection->lastInsertId();
     }
 
+    /**
+     * Verifica se l'utente è già artista.
+     * Se è già nella tabella artists, non può più inviare richieste.
+     */
     public function userHasCard(int $userId): bool
     {
         $statement = $this->connection->prepare(
-            'SELECT COUNT(*) FROM artists_cards WHERE user_id = :user_id'
+            'SELECT COUNT(*)
+             FROM artists_card
+             WHERE id_artist = :id_user'
         );
-        $statement->execute(['user_id' => $userId]);
+
+        $statement->execute(['id_user' => $userId]);
 
         return (bool) $statement->fetchColumn();
     }
