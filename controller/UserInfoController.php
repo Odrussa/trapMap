@@ -19,7 +19,17 @@ if ($username === null) {
     exit;
 }
 
+$hasArtistCard = false;
+
+try {
+    $artistCardRepository = new ArtistCardRequestRepository($database);
+    $hasArtistCard = $artistCardRepository->userHasCard((int) $session->get('user_id'));
+} catch (Throwable $exception) {
+    error_log('User info artist card lookup failed: ' . $exception->getMessage());
+}
+
 echo json_encode([
     'logged_in' => true,
     'username' => $username,
+    'has_artist_card' => $hasArtistCard,
 ]);

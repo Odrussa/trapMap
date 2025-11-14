@@ -21,7 +21,13 @@ if (!is_array($payload)) {
 
 // ✅ 3. Recupera l'ID utente dalla sessione
 $session = SessionManager::getInstance();
-$idUser = $session->get('id_user');
+$idUser = $session->get('user_id');
+
+if ($idUser === null) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'errors' => ['Utente non autenticato.']]);
+    exit;
+}
 
 if ($idUser === null) {
     http_response_code(403);

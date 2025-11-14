@@ -8,7 +8,6 @@ menuToggle?.addEventListener('click', () => {
 const userSession = {
   loggedIn: false,
   username: '',
-  isArtist: false,
   hasArtistCard: false
 };
 
@@ -46,7 +45,6 @@ const globalNotification = document.getElementById('globalNotification');
 const artistNameInput = document.getElementById('artistName');
 const artistAliasInput = document.getElementById('artistAlias');
 const artistProvinceInput = document.getElementById('artistProvince');
-const artistRegionInput = document.getElementById('artistRegion');
 const artistCategoryInput = document.getElementById('artistCategory');
 const artistSpotifyInput = document.getElementById('artistSpotify');
 const artistInstagramInput = document.getElementById('artistInstagram');
@@ -127,8 +125,8 @@ function updateProfilePanelState() {
   setActionVisibility(profileActionSuggest, isLogged);
   setActionVisibility(profileActionMySuggestions, isLogged);
   setActionVisibility(profileActionLogout, isLogged);
-  setActionVisibility(profileActionCreateCard, isLogged && userSession.isArtist && !userSession.hasArtistCard);
-  setActionVisibility(profileActionEditCard, isLogged && userSession.hasArtistCard);
+  setActionVisibility(profileActionCreateCard, isLogged && !userSession.hasArtistCard);
+  setActionVisibility(profileActionEditCard, false);
 }
 
 function openProfilePanel() {
@@ -195,7 +193,6 @@ function handleLogout(event) {
       if (data.success) {
         userSession.loggedIn = false;
         userSession.username = '';
-        userSession.isArtist = false;
         userSession.hasArtistCard = false;
         clearProfileMenu();
         toggleAuthLinks(true);
@@ -255,7 +252,6 @@ function showProfileMenu(username) {
 function applySessionData(data) {
   userSession.loggedIn = true;
   userSession.username = data.username || '';
-  userSession.isArtist = Boolean(data.is_artist);
   userSession.hasArtistCard = Boolean(data.has_artist_card);
   showProfileMenu(userSession.username || 'Profilo');
 }
@@ -274,7 +270,6 @@ function checkUserSession() {
       } else {
         userSession.loggedIn = false;
         userSession.username = '';
-        userSession.isArtist = false;
         userSession.hasArtistCard = false;
         toggleAuthLinks(true);
         clearProfileMenu();
@@ -334,7 +329,7 @@ function openArtistCardForm(mode = 'create') {
   }
 
   if (artistCardSubmit) {
-    artistCardSubmit.textContent = mode === 'edit' ? 'Aggiorna la mia artist card' : 'Pubblica la mia artist card';
+    artistCardSubmit.textContent = mode === 'edit' ? 'Aggiorna la mia artist card' : 'Crea la mia artist card';
   }
 
   artistCardModal.classList.remove('hidden');
@@ -377,13 +372,8 @@ function handleCreateCardAction() {
     return;
   }
 
-  if (!userSession.isArtist && !userSession.hasArtistCard) {
-    showGlobalNotification('Richiedi l’abilitazione come artista dal team TrapMap', 'warning');
-    return;
-  }
-
   closeProfilePanel();
-  openArtistCardForm(userSession.hasArtistCard ? 'edit' : 'create');
+  openArtistCardForm('create');
 }
 
 function handleMySuggestionsAction() {
@@ -502,7 +492,7 @@ suggestionForm?.addEventListener('submit', async event => {
   }
 });
 
-artistCardForm?.addEventListener('submit', event => {
+artistCardForm?.addEventListener('submit', async event => {
   event.preventDefault();
 
   if (!artistCardForm.reportValidity()) {
@@ -510,24 +500,45 @@ artistCardForm?.addEventListener('submit', event => {
     return;
   }
 
-  const successMessage = artistCardMode === 'edit'
-    ? 'Artist card aggiornata ✅'
-    : 'Artist card pubblicata ✅';
+  const formData = new FormData(artistCardForm);
+  setFormFeedback(artistCardFeedback, 'Invio in corso...', 'info');
 
-  setFormFeedback(artistCardFeedback, 'Salvataggio in corso...', 'info');
+  try {
+    const response = await fetch('../controller/ArtistCardController.php', {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin'
+    });
 
-  setTimeout(() => {
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      const errorMessage = Array.isArray(result.errors) && result.errors.length > 0
+        ? result.errors.join('\n')
+        : (result.message || 'Impossibile creare la tua artist card.');
+
+      setFormFeedback(artistCardFeedback, errorMessage, 'error');
+      showGlobalNotification(errorMessage, 'warning');
+      return;
+    }
+
+    const successMessage = result.message || 'La tua artist card è stata inviata ✅';
     setFormFeedback(artistCardFeedback, successMessage);
     showGlobalNotification(successMessage);
-    userSession.isArtist = true;
     userSession.hasArtistCard = true;
     updateProfilePanelState();
-    if (artistCardMode === 'create') {
-      setTimeout(() => {
-        closeArtistCardForm();
-      }, 1100);
-    }
-  }, 1000);
+    artistCardForm.reset();
+    updateArtistPreviewImage(null);
+    refreshArtistPreview();
+
+    setTimeout(() => {
+      closeArtistCardForm();
+    }, 1200);
+  } catch (error) {
+    console.error('Artist card creation error:', error);
+    setFormFeedback(artistCardFeedback, 'Si è verificato un errore inatteso. Riprova più tardi.', 'error');
+    showGlobalNotification('Si è verificato un errore inatteso. Riprova più tardi.', 'warning');
+  }
 });
 
 function refreshArtistPreview() {
@@ -538,19 +549,12 @@ function refreshArtistPreview() {
   const nameValue = artistNameInput?.value.trim();
   const aliasValue = artistAliasInput?.value.trim().replace(/^@+/, '');
   const provinceValue = artistProvinceInput?.value.trim();
-  const regionValue = artistRegionInput?.value.trim();
   const categoryValue = artistCategoryInput?.value;
 
   artistPreviewName.textContent = nameValue || 'Nome artista';
   artistPreviewAlias.textContent = aliasValue ? `@${aliasValue}` : '@alias';
 
-  let locationText = '';
-  if (provinceValue && regionValue) {
-    locationText = `${provinceValue} • ${regionValue}`;
-  } else if (provinceValue || regionValue) {
-    locationText = provinceValue || regionValue;
-  }
-  artistPreviewLocation.textContent = locationText || 'Provincia • Regione';
+  artistPreviewLocation.textContent = provinceValue || 'Provincia';
 
   let categoryLabel = 'Categoria';
   if (categoryValue === 'rapper') {
@@ -598,7 +602,6 @@ function updateArtistPreviewImage(source) {
 artistNameInput?.addEventListener('input', refreshArtistPreview);
 artistAliasInput?.addEventListener('input', refreshArtistPreview);
 artistProvinceInput?.addEventListener('change', refreshArtistPreview);
-artistRegionInput?.addEventListener('change', refreshArtistPreview);
 artistCategoryInput?.addEventListener('change', refreshArtistPreview);
 artistSpotifyInput?.addEventListener('input', refreshArtistPreview);
 artistInstagramInput?.addEventListener('input', refreshArtistPreview);
