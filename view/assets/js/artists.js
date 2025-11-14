@@ -35,7 +35,7 @@ class ArtistCardFactory {
   }
 
   /* ===========================
-     PREVIEW DEL FORM
+     PREVIEW DEL FORM (PER ORA INUTILE)
      =========================== */
   static createPreviewCard(artist) {
     const outer = document.createElement("div");
@@ -71,13 +71,19 @@ class ArtistCardFactory {
     title.textContent = artist.nome;
     body.appendChild(title);
 
-    const meta = document.createElement("p");
-    meta.classList.add("artist-card-meta");
-    meta.textContent =
-      artist.alias
-        ? `${artist.alias} • ${artist.provincia}`
-        : artist.provincia;
-    body.appendChild(meta);
+    if (artist.alias) {
+      const alias = document.createElement("p");
+      alias.classList.add("artist-card-alias");
+      alias.textContent = `@${artist.alias}`;
+      body.appendChild(alias);
+    }
+
+    if (artist.provincia) {
+      const location = document.createElement("p");
+      location.classList.add("artist-card-meta");
+      location.textContent = artist.provincia;
+      body.appendChild(location);
+    }
 
     const category = document.createElement("p");
     category.classList.add("artist-card-category");

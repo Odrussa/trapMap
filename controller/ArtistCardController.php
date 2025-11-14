@@ -207,6 +207,16 @@ try {
 // 6. Salvataggio categoria nella pivot 
 // ---------------------------------------------------
 
+$categoryMap = [
+    'rapper'   => [1],
+    'producer' => [2],
+    'both'     => [1, 2] // <-- "both" diventa due ID
+];
+
+$inputCategory = $input['categoria'];
+
+$categoryIds = $categoryMap[$inputCategory] ?? [];
+
 try {
     if (!empty($input['categoria'])) {
 
@@ -215,10 +225,12 @@ try {
              VALUES (:artist_id, :category_id)'
         );
 
+       foreach ($categoryIds as $catId) {
         $stmt->execute([
-            'artist_id'   => $cardId, // ID della card appena creata
-            'category_id' => (int) $input['categoria']
+            'artist_id'   => $cardId,
+            'category_id' => $catId
         ]);
+    }
     }
 } catch (Throwable $exception) {
 
