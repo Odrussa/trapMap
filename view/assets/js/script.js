@@ -444,6 +444,7 @@ suggestionForm?.addEventListener('submit', async event => {
     return;
   }
 
+
   const formData = new FormData(suggestionForm);
   const links = suggestionForm.querySelectorAll('input[name="links"]');
 
@@ -562,7 +563,7 @@ function refreshArtistPreview() {
   } else if (categoryValue === 'producer') {
     categoryLabel = 'Producer';
   } else if (categoryValue === 'both') {
-    categoryLabel = 'Rapper & Producer';
+    categoryLabel = 'Rapper, Producer';
   }
   artistPreviewCategory.textContent = categoryLabel;
 

@@ -11,7 +11,7 @@ class ArtistCardRequestRepository
 
     /**
      * Crea una nuova artist card (in stato pending).
-     * id_artist è NULL perché l'utente non è ancora artista.
+     * id_artist contiene l'utente-atrtista proprietario della card. 
      */
     public function create(array $data): int
     {
@@ -40,7 +40,7 @@ class ArtistCardRequestRepository
         );
 
         $statement->execute([
-            'id_artist'    => $data['id_artist'],  // può essere null
+            'id_artist'    => $data['id_artist'], 
             'nome_artista' => $data['nome_artista'],
             'alias'        => $data['alias'] !== '' ? $data['alias'] : null,
             'provincia'    => $data['provincia'],
@@ -52,7 +52,19 @@ class ArtistCardRequestRepository
         ]);
 
         return (int) $this->connection->lastInsertId();
+		
+		 $stmt = $this->connection->prepare(
+            'INSERT INTO artist_categories (artist_id, category_id)
+             VALUES (:artist_id, :category_id)'
+        );
+
+        $stmt->execute([
+            'artist_id'   => $cardId, // ID della card appena creata
+            'category_id' => (int) $input['categoria']
+        ]);
     }
+	
+	
 
     /**
      * Verifica se l'utente è già artista.

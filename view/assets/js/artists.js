@@ -35,7 +35,7 @@ class ArtistCardFactory {
   }
 
   /* ===========================
-     PREVIEW DEL FORM
+     PREVIEW DEL FORM (PER ORA INUTILE)
      =========================== */
   static createPreviewCard(artist) {
     const outer = document.createElement("div");
