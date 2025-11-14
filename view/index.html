@@ -19,8 +19,8 @@
       <li><a href="#">Artisti</a></li>
       <li><a href="#">Crew</a></li>
       <li><a href="#">About</a></li>
-	  <li><a href="#" onclick="openLogin()">Login</a></li>
-	  <li><a href="#" onclick="openRegister()">Registrati</a></li>
+	  <li id="navLoginItem"><a href="#" id="navLoginLink">Login</a></li>
+	  <li id="navRegisterItem"><a href="#" id="navRegisterLink">Registrati</a></li>
     </ul>
   </nav>
 </header>
@@ -35,6 +35,8 @@
     <p class="profile-panel-username" id="profileUsername"></p>
     <ul class="profile-panel-actions" role="menu">
       <li><button type="button" id="profileActionSuggest" class="profile-action" role="menuitem">Invia un suggerimento</button></li>
+      <li><button type="button" id="profileActionCreateCard" class="profile-action" role="menuitem">Crea la tua artist card</button></li>
+      <li><button type="button" id="profileActionEditCard" class="profile-action" role="menuitem">Modifica la mia artist card</button></li>
       <li><button type="button" id="profileActionMySuggestions" class="profile-action" role="menuitem">I miei suggerimenti</button></li>
       <li><button type="button" id="profileActionLogout" class="profile-action profile-action-logout" role="menuitem">Logout</button></li>
     </ul>
@@ -235,6 +237,6 @@
 <div id="globalNotification" class="global-notification hidden" role="status" aria-live="polite"></div>
 
 <!-- LINK JS -->
-<script src="assets/js/script.js"></script>
+<script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
