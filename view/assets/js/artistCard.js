@@ -9,6 +9,7 @@ const closeArtistCardButton = document.getElementById('closeArtistCardForm');
 
 const artistNameInput = document.getElementById('artistName');
 const artistAliasInput = document.getElementById('artistAlias');
+const artistRegionInput = document.getElementById('artistRegion');
 const artistProvinceInput = document.getElementById('artistProvince');
 const artistCategoryInput = document.getElementById('artistCategory');
 const artistSpotifyInput = document.getElementById('artistSpotify');
@@ -81,13 +82,21 @@ function refreshArtistPreview() {
 
   const nameValue = artistNameInput?.value.trim();
   const aliasValue = artistAliasInput?.value.trim().replace(/^@+/, '');
+  const regionValue = artistRegionInput?.value.trim();
   const provinceValue = artistProvinceInput?.value.trim();
   const categoryValue = artistCategoryInput?.value;
 
   artistPreviewName.textContent = nameValue || 'Nome artista';
   artistPreviewAlias.textContent = aliasValue ? `@${aliasValue}` : '@alias';
 
-  artistPreviewLocation.textContent = provinceValue || 'Provincia';
+  const locationParts = [];
+  if (provinceValue) {
+    locationParts.push(provinceValue);
+  }
+  if (regionValue) {
+    locationParts.push(regionValue);
+  }
+  artistPreviewLocation.textContent = locationParts.join(' - ') || 'Località';
 
   let categoryLabel = 'Categoria';
   if (categoryValue === 'rapper') {
@@ -149,6 +158,7 @@ function handleArtistImageChange(event) {
 function attachPreviewListeners() {
   artistNameInput?.addEventListener('input', refreshArtistPreview);
   artistAliasInput?.addEventListener('input', refreshArtistPreview);
+  artistRegionInput?.addEventListener('change', refreshArtistPreview);
   artistProvinceInput?.addEventListener('change', refreshArtistPreview);
   artistCategoryInput?.addEventListener('change', refreshArtistPreview);
   artistSpotifyInput?.addEventListener('input', refreshArtistPreview);

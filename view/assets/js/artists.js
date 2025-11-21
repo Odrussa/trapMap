@@ -1,10 +1,19 @@
-// Recupera la provincia dalla query string
+// Recupera i parametri di localizzazione dalla query string
 const params = new URLSearchParams(window.location.search);
 const province = params.get('province');
+const region = params.get('region');
 
-document.getElementById('page-title').textContent = province
-  ? `Artisti della provincia di ${province}`
-  : 'Artisti della provincia';
+const pageTitle = document.getElementById('page-title');
+
+if (pageTitle) {
+  if (province) {
+    pageTitle.textContent = `Artisti della provincia di ${province}`;
+  } else if (region) {
+    pageTitle.textContent = `Artisti della regione ${region}`;
+  } else {
+    pageTitle.textContent = 'Artisti da tutta Italia';
+  }
+}
 
 /**
  * Factory responsabile della creazione delle card artista.
@@ -116,9 +125,11 @@ class ArtistCardFactory {
     wrapper.appendChild(li);
   }
 }
+const fetchUrl = province
+  ? `../controller/ArtistsController.php?province=${encodeURIComponent(province)}`
+  : '../controller/ArtistsController.php';
 
-
-fetch(`../controller/ArtistsController.php?province=${encodeURIComponent(province ?? '')}`)
+fetch(fetchUrl)
   .then(res => {
     if (!res.ok) {
       throw new Error('Errore durante il recupero degli artisti');
@@ -128,12 +139,19 @@ fetch(`../controller/ArtistsController.php?province=${encodeURIComponent(provinc
   .then(data => {
     const artistsDiv = document.getElementById('artist-cards');
 
-    if (!Array.isArray(data) || data.length === 0) {
-      artistsDiv.innerHTML = '<p>Nessun artista registrato in questa provincia 😢</p>';
+    let filteredData = Array.isArray(data) ? data : [];
+
+    if (region && !province) {
+      filteredData = filteredData.filter(artist => artist.regione && artist.regione.toLowerCase() === region.toLowerCase());
+    }
+
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      const emptyLocation = province ? `la provincia di ${province}` : region ? `la regione ${region}` : "l'Italia";
+      artistsDiv.innerHTML = `<p>Nessun artista registrato per ${emptyLocation} 😢</p>`;
       return;
     }
 
-    data.forEach(artist => {
+    filteredData.forEach(artist => {
       const card = ArtistCardFactory.createCard('standard', artist);
       artistsDiv.appendChild(card);
     });
