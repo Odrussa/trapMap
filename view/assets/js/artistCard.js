@@ -1,3 +1,7 @@
+// ===============================================================
+//   FORM ARTISTI
+// ===============================================================
+
 import { setFormFeedback, showGlobalNotification } from './notifications.js';
 
 const artistCardModal = document.getElementById('artistCardModal');

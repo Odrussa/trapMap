@@ -3,7 +3,9 @@ import { initAuth, openLogin, openRegister } from './auth.js';
 import { initSuggestionForm, closeSuggestionForm, isSuggestionFormOpen } from './suggestions.js';
 import { initArtistCardForm, closeArtistCardForm, isArtistCardFormOpen } from './artistCard.js';
 import { initSessionUI, checkUserSession, handleEscapeKey } from './session.js';
-import { populateLocationSelectors, loadItalyMap } from './map.js';
+import { populateLocationSelectors } from './location-utils.js';
+import { loadItalyMap } from './map.js';
+
 
 function onDocumentReady(callback) {
   if (document.readyState === 'loading') {
