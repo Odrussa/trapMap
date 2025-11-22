@@ -1,7 +1,7 @@
 :root {
     --bg: #0a0a0a;
     --bg-panel: #070707;
-    --bg-modal: #111111;
+	--bg-modal: #111;
     --neon-green: #39ff14;
     --neon-pink: #ff39f0;
     --neon-pink-dark: #ff00e0;
@@ -511,7 +511,7 @@ nav ul li a:focus {
     padding: 12px 14px;
     border-radius: 10px;
     border: 2px solid var(--neon-pink);
-    background: #080808;
+    background: var(--bg-modal);
     color: var(--text-primary);
     font-size: 0.95rem;
     transition: border-color var(--transition-base), box-shadow var(--transition-base);
@@ -520,10 +520,10 @@ nav ul li a:focus {
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-     border-color: var(--neon-pink);
+    border-color: var(--neon-pink);
     box-shadow: 0 0 12px rgba(255, 57, 240, 0.3);
     outline: none;
-	background: #080808;
+	background: var(--bg-modal);
 }
 
 .form-field input:-webkit-autofill,
@@ -538,7 +538,7 @@ nav ul li a:focus {
 .form-field input:-webkit-autofill:focus,
 .form-field select:-webkit-autofill:focus,
 .form-field textarea:-webkit-autofill:focus {
-    box-shadow: 0 0 12px rgba(57, 255, 20, 0.3), 0 0 0px 1000px #080808 inset;
+    box-shadow: 0 0 12px rgba(57, 255, 20, 0.3), 0 0 0px 1000px var(--bg-modal) inset;
     -webkit-text-fill-color: var(--text-primary);
     caret-color: var(--text-primary);
     border-color: var(--neon-pink);
@@ -716,7 +716,7 @@ nav ul li a:focus {
 }
 
 .overlay-content {
-    background-color: #111;
+    background-color: var(--bg-modal);
     padding: 30px;
     border: 2px solid var(--neon-pink);
     border-radius: 15px;
@@ -742,7 +742,7 @@ nav ul li a:focus {
     margin: 8px 0;
     border-radius: 8px;
     border: 2px solid var(--neon-pink);
-    background-color: #111;
+    background-color: var(--bg-modal);
     color: #fff;
     outline: none;
     font-family: 'Roboto', sans-serif;
@@ -752,18 +752,18 @@ nav ul li a:focus {
 .overlay-content input:focus {
     border-color: var(--neon-pink);
     box-shadow: 0 0 10px var(--neon-pink);
-    background-color: #111;
+    background-color:  var(--bg-modal);
 }
 
 .overlay-content input:-webkit-autofill {
-    box-shadow: 0 0 0px 1000px #111 inset;
+    box-shadow: 0 0 0px 1000px  var(--bg-modal) inset;
     -webkit-text-fill-color: #fff;
     caret-color: #fff;
     border-color: var(--neon-pink);
 }
 
 .overlay-content input:-webkit-autofill:focus {
-    box-shadow: 0 0 10px var(--neon-pink), 0 0 0px 1000px #111 inset;
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 0px 1000px var(--bg-modal) inset;
     -webkit-text-fill-color: #fff;
     caret-color: #fff;
     border-color: var(--neon-pink);
@@ -957,3 +957,6 @@ footer .socials a:focus {
         padding: 18px;
     }
 }
+
+/* Ottimizzazioni: uniformato sfondo e input dei form con i moduli di login/registrazione e centralizzato
+ il colore di base per evitare ripetizioni. */
