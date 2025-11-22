@@ -1,10 +1,11 @@
-// Recupera la provincia dalla query string
+// Recupera la regione dalla query string
 const params = new URLSearchParams(window.location.search);
-const province = params.get('province');
+const region = params.get('region');
 
-document.getElementById('page-title').textContent = province
-  ? `Artisti della provincia di ${province}`
-  : 'Artisti della provincia';
+
+document.getElementById('page-title').textContent = region
+  ? `Artisti della regione ${region}`
+  : `Artisti della regione`;
 
 /**
  * Factory responsabile della creazione delle card artista.
@@ -35,7 +36,7 @@ class ArtistCardFactory {
   }
 
   /* ===========================
-     PREVIEW DEL FORM (PER ORA INUTILE)
+     PREVIEW DEL FORM
      =========================== */
   static createPreviewCard(artist) {
     const outer = document.createElement("div");
@@ -77,7 +78,7 @@ class ArtistCardFactory {
       alias.textContent = `@${artist.alias}`;
       body.appendChild(alias);
     }
-
+	
     if (artist.provincia) {
       const location = document.createElement("p");
       location.classList.add("artist-card-meta");
@@ -118,7 +119,7 @@ class ArtistCardFactory {
 }
 
 
-fetch(`../controller/ArtistsController.php?province=${encodeURIComponent(province ?? '')}`)
+fetch(`../controller/ArtistsController.php?region=${encodeURIComponent(region ?? '')}`)
   .then(res => {
     if (!res.ok) {
       throw new Error('Errore durante il recupero degli artisti');
@@ -129,7 +130,7 @@ fetch(`../controller/ArtistsController.php?province=${encodeURIComponent(provinc
     const artistsDiv = document.getElementById('artist-cards');
 
     if (!Array.isArray(data) || data.length === 0) {
-      artistsDiv.innerHTML = '<p>Nessun artista registrato in questa provincia 😢</p>';
+      artistsDiv.innerHTML = '<p>Nessun artista registrato in questa regione 😢</p>';
       return;
     }
 
