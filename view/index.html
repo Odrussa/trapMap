@@ -47,13 +47,13 @@
   <a href="#map" class="btn-primary hero-btn">Vai alla Mappa</a>
 </section>
 
- <!-- Tooltip globale per nome provincia cursore-->
+ <!-- Tooltip globale per nome regione cursore-->
  <div id="tooltip" class="tooltip"></div>
 
 <section id="map" class="map-section">
   <h2>La Mappa</h2>
   <div class="italy-map-container">
-     <div id="map-container" aria-live="polite" role="img" aria-label="Mappa delle province italiane"></div>
+     <div id="map-container" aria-live="polite" role="img" aria-label="Mappa delle regioni italiane"></div>
   </div>
   <div class="map-cta" aria-label="Azioni rapide">
     <button type="button" class="cta-button" id="suggestArtistCta">Suggerisci un artista</button>
@@ -79,9 +79,14 @@
           <input type="text" id="suggestArtistAlias" name="artist_alias">
         </div>
         <div class="form-field">
-          <label for="suggestLocation">Provincia </label>
-          <select id="suggestLocation" name="location">
-            <option value="">Non specificato</option>
+		  <label for="suggestRegion">Regione </label>
+          <select id="suggestRegion" name="region" data-populate="region" required>
+          </select>
+		</div>
+		<div class="form-field"> 
+          <label for="suggestProvince">Provincia </label>
+          <select id="suggestProvince" name="province" data-populate="province" disabled>
+            <option value=""></option>
           </select>
         </div>
         <div class="form-field">
@@ -130,10 +135,15 @@
             <label for="artistAlias">Alias <span class="optional-label">(opzionale)</span></label>
             <input type="text" id="artistAlias" name="artist_alias" placeholder="Es. @nickname">
           </div>
+		   <div class="form-field">
+            <label for="artistRegion">Regione *</label>
+            <select id="artistRegion" name="region" data-populate="region" required>
+            </select>
+          </div>
           <div class="form-field">
             <label for="artistProvince">Provincia *</label>
-            <select id="artistProvince" name="province" data-populate="province" required>
-              <option value="">Seleziona provincia</option>
+            <select id="artistProvince" name="province" data-populate="province" disabled>
+              <option value=""></option>
             </select>
           </div>
           <div class="form-field">

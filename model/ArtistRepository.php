@@ -11,7 +11,7 @@ class ArtistRepository
         $this->connection = $connection;
     }
 
-    public function findByProvince(?string $province = null): array
+    public function findByRegion(?string $region = null): array
     {
         $baseQuery = '
             SELECT 
@@ -31,9 +31,9 @@ class ArtistRepository
 
         $parameters = [];
 
-        if ($province) {
-            $baseQuery .= ' WHERE a.provincia = :provincia';
-            $parameters['provincia'] = $province;
+        if ($region) {
+            $baseQuery .= ' WHERE a.regione = :regione';
+            $parameters['regione'] = $region;
         }
 
         // Raggruppa per artista

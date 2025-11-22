@@ -55,7 +55,8 @@ export function initSuggestionForm() {
     const payload = {
       nome_artista: formData.get('artist_name')?.toString().trim() || '',
       alias: formData.get('artist_alias')?.toString().trim() || '',
-      provincia: formData.get('location')?.toString().trim() || '',
+      regione: formData.get('region')?.toString().trim() || '',
+	  provincia: formData.get('province')?.toString().trim() || '',
       categoria: formData.get('category')?.toString().trim() || '',
       instagram: links[0]?.value?.trim() || '',
       spotify: links[1]?.value?.trim() || '',

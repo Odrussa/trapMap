@@ -1,167 +1,94 @@
-//id svg ->valori dei parametri query string
-const provinceMap = {
-  L_AQUILA: "L'Aquila",
-  TERAMO: 'Teramo',
-  PESCARA: 'Pescara',
-  CHIETI: 'Chieti',
-  POTENZA: 'Potenza',
-  MATERA: 'Matera',
-  CATANZARO: 'Catanzaro',
-  COSENZA: 'Cosenza',
-  CROTONE: 'Crotone',
-  REGGIO_CALABRIA: 'Reggio Calabria',
-  VIBO_VALENTIA: 'Vibo Valentia',
-  AVELLINO: 'Avellino',
-  BENEVENTO: 'Benevento',
-  CASERTA: 'Caserta',
-  NAPOLI: 'Napoli',
-  SALERNO: 'Salerno',
-  BOLOGNA: 'Bologna',
-  FERRARA: 'Ferrara',
-  FORLI_CESENA: 'Forlì-Cesena',
-  MODENA: 'Modena',
-  PARMA: 'Parma',
-  PIACENZA: 'Piacenza',
-  RAVENNA: 'Ravenna',
-  REGGIO_EMILIA: 'Reggio Emilia',
-  RIMINI: 'Rimini',
-  GORIZIA: 'Gorizia',
-  PORDENONE: 'Pordenone',
-  TRIESTE: 'Trieste',
-  UDINE: 'Udine',
-  FROSINONE: 'Frosinone',
-  LATINA: 'Latina',
-  RIETI: 'Rieti',
-  ROMA: 'Roma',
-  VITERBO: 'Viterbo',
-  GENOVA: 'Genova',
-  IMPERIA: 'Imperia',
-  LA_SPEZIA: 'La Spezia',
-  SAVONA: 'Savona',
-  BERGAMO: 'Bergamo',
-  BRESCIA: 'Brescia',
-  COMO: 'Como',
-  CREMONA: 'Cremona',
-  LECCO: 'Lecco',
-  LODI: 'Lodi',
-  MANTOVA: 'Mantova',
-  MILANO: 'Milano',
-  MONZA_BRIANZA: 'Monza-Brianza',
-  PAVIA: 'Pavia',
-  SONDRIO: 'Sondrio',
-  VARESE: 'Varese',
-  ANCONA: 'Ancona',
-  ASCOLI_PICENO: 'Ascoli Piceno',
-  FERMO: 'Fermo',
-  MACERATA: 'Macerata',
-  PESARO_E_URBINO: 'Pesaro e Urbino',
-  CAMPOBASSO: 'Campobasso',
-  ISERNIA: 'Isernia',
-  ALESSANDRIA: 'Alessandria',
-  ASTI: 'Asti',
-  BIELLA: 'Biella',
-  CUNEO: 'Cuneo',
-  NOVARA: 'Novara',
-  TORINO: 'Torino',
-  VERBANO_CUSIO_OSSOLA: 'Verbano-Cusio-Ossola',
-  VERCELLI: 'Vercelli',
-  BARI: 'Bari',
-  BARLETTA_ANDRIA_TRANI: 'Barletta-Andria-Trani',
-  BRINDISI: 'Brindisi',
-  FOGGIA: 'Foggia',
-  LECCE: 'Lecce',
-  TARANTO: 'Taranto',
-  CAGLIARI: 'Cagliari',
-  NUORO: 'Nuoro',
-  ORISTANO: 'Oristano',
-  OGLIASTRA: 'Ogliastra',
-  OLBIA_TEMPIO: 'Olbia-Tempio',
-  SASSARI: 'Sassari',
-  CARBONIA_IGLESIAS: 'Carbonia-Iglesias',
-  MEDIO_CAMPIDANO: 'Medio-Campiano',
-  AGRIGENTO: 'Agrigento',
-  CALTANISSETTA: 'Caltanissetta',
-  CATANIA: 'Catania',
-  ENNA: 'Enna',
-  MESSINA: 'Messina',
-  PALERMO: 'Palermo',
-  RAGUSA: 'Ragusa',
-  SIRACUSA: 'Siracusa',
-  TRAPANI: 'Trapani',
-  AREZZO: 'Arezzo',
-  FIRENZE: 'Firenze',
-  GROSSETO: 'Grosseto',
-  LIVORNO: 'Livorno',
-  LUCCA: 'Lucca',
-  MASSA_CARRARA: 'Massa-Carrara',
-  PISA: 'Pisa',
-  PISTOIA: 'Pistoia',
-  PRATO: 'Prato',
-  SIENA: 'Siena',
-  BOLZANO: 'Bolzano',
-  TRENTO: 'Trento',
-  PERUGIA: 'Perugia',
-  TERNI: 'Terni',
-  AOSTA: 'Aosta',
-  BELLUNO: 'Belluno',
-  PADOVA: 'Padova',
-  ROVIGO: 'Rovigo',
-  TREVISO: 'Treviso',
-  VENEZIA: 'Venezia',
-  VERONA: 'Verona',
-  VICENZA: 'Vicenza'
+
+// id SVG -> nome regione
+const regionMap = {
+  IT65: "Abruzzo",
+  IT77: "Basilicata",
+  IT78: "Calabria",
+  IT72: "Campania",
+  IT45: "Emilia-Romagna",
+  IT36: "Friuli-Venezia Giulia",
+  IT62: "Lazio",
+  IT42: "Liguria",
+  IT25: "Lombardia",
+  IT57: "Marche",
+  IT67: "Molise",
+  IT21: "Piemonte",
+  IT75: "Puglia",
+  IT88: "Sardegna",
+  IT82: "Sicilia",
+  IT52: "Toscana",
+  IT32: "Trentino-Alto Adige",
+  IT55: "Umbria",
+  IT23: "Valle d'Aosta",
+  IT34: "Veneto"
 };
 
-const italianRegions = [
-  'Abruzzo',
-  'Basilicata',
-  'Calabria',
-  'Campania',
-  'Emilia-Romagna',
-  'Friuli-Venezia Giulia',
-  'Lazio',
-  'Liguria',
-  'Lombardia',
-  'Marche',
-  'Molise',
-  'Piemonte',
-  'Puglia',
-  'Sardegna',
-  'Sicilia',
-  'Toscana',
-  'Trentino-Alto Adige',
-  'Umbria',
-  "Valle d'Aosta",
-  'Veneto'
-];
+
+const regionProvinceMap = {
+  "Valle d'Aosta": ["Aosta"],
+  Piemonte: ['Torino', 'Cuneo', 'Asti', 'Alessandria', 'Biella', 'Novara', 'Vercelli', 'Verbano-Cusio-Ossola'],
+  Liguria: ['Genova', 'Imperia', 'La Spezia', 'Savona'],
+  Lombardia: ['Bergamo', 'Brescia', 'Como', 'Cremona', 'Lecco', 'Lodi', 'Mantova', 'Milano', 'Monza-Brianza', 'Pavia', 'Sondrio', 'Varese'],
+  'Trentino-Alto Adige': ['Bolzano', 'Trento'],
+  Veneto: ['Belluno', 'Padova', 'Rovigo', 'Treviso', 'Venezia', 'Verona', 'Vicenza'],
+  'Friuli-Venezia Giulia': ['Gorizia', 'Pordenone', 'Trieste', 'Udine'],
+  Toscana: ['Arezzo', 'Firenze', 'Grosseto', 'Livorno', 'Lucca', 'Massa-Carrara', 'Pisa', 'Pistoia', 'Prato', 'Siena'],
+  Umbria: ['Perugia', 'Terni'],
+  Lazio: ['Frosinone', 'Latina', 'Rieti', 'Roma', 'Viterbo'],
+  Abruzzo: ["L'Aquila", 'Teramo', 'Pescara', 'Chieti'],
+  Puglia: ['Bari', 'Barletta-Andria-Trani', 'Brindisi', 'Foggia', 'Lecce', 'Taranto'],
+  Campania: ['Avellino', 'Benevento', 'Caserta', 'Napoli', 'Salerno'],
+  Molise: ['Campobasso', 'Isernia'],
+  Basilicata: ['Matera', 'Potenza'],
+  Calabria: ['Catanzaro', 'Cosenza', 'Crotone', 'Reggio Calabria', 'Vibo Valentia'],
+  Sicilia: ['Agrigento', 'Caltanissetta', 'Catania', 'Enna', 'Messina', 'Palermo', 'Ragusa', 'Siracusa', 'Trapani'],
+  Sardegna: ['Cagliari', 'Nuoro', 'Oristano', 'Sassari', 'Sud Sardegna'],
+  'Emilia-Romagna': ['Bologna', 'Ferrara', 'Forlì-Cesena', 'Modena', 'Parma', 'Piacenza', 'Ravenna', 'Reggio Emilia', 'Rimini'],
+  Marche: ['Ancona', 'Ascoli Piceno', 'Fermo', 'Macerata', 'Pesaro e Urbino']
+};
+
+
+// ===============================================================
+//   ORDINAMENTO
+// ===============================================================
 
 function localeSort(a, b) {
   return a.localeCompare(b, 'it', { sensitivity: 'base' });
 }
 
-const provinceList = Array.from(new Set(Object.values(provinceMap))).sort(localeSort);
-const regionList = [...italianRegions].sort(localeSort);
+const regionList = Object.keys(regionProvinceMap).sort(localeSort);
 
-function apriPaginaArtisti(provincia) {
-  window.location.href = `artists.html?province=${encodeURIComponent(provincia)}`;
+
+
+
+// ===============================================================
+//   NAVIGAZIONE REGIONI
+// ===============================================================
+
+function apriPaginaArtisti(regione) {
+  window.location.href = `artists.html?region=${encodeURIComponent(regione)}`;
 }
 
-function setupProvinceInteractions(svgElement) {
+
+//interazione con la mappa
+function setupRegionInteractions(svgElement) {
   const tooltip = document.getElementById('tooltip');
   if (!svgElement || !tooltip) {
     return;
   }
 
-  const provinces = svgElement.querySelectorAll('path[id]');
+  const regions = svgElement.querySelectorAll('path[id]');
 
-  provinces.forEach(path => {
-    const provinceName = path.id;
+
+  regions.forEach(path => {
+    const regionId = path.id;
+	const regionName = regionMap[regionId];
 
     path.addEventListener('mousemove', e => {
       tooltip.style.opacity = '1';
       tooltip.style.left = `${e.pageX + 10}px`;
       tooltip.style.top = `${e.pageY + 10}px`;
-      tooltip.innerText = provinceName;
+      tooltip.innerText = regionName;
     });
 
     path.addEventListener('mouseleave', () => {
@@ -169,29 +96,27 @@ function setupProvinceInteractions(svgElement) {
     });
 
     path.addEventListener('click', () => {
-      const provName = provinceMap[path.id.toUpperCase()];
-      if (provName) {
-        apriPaginaArtisti(provName);
+      if (regionName) {
+        apriPaginaArtisti(regionName);
       } else {
-        alert('Nessuna provincia associata a questo ID 😢');
+        alert('Nessuna regione associata a questo ID 😢');
       }
     });
   });
 }
 
+
+
+// ===============================================================
+//   CARICAMENTO MAPPA ITALIA (REGIONI ATTIVE)
+// ===============================================================
+
 export function loadItalyMap() {
   const mapContainer = document.getElementById('map-container');
-  if (!mapContainer) {
-    return;
-  }
+  if (!mapContainer) return;
 
-  fetch('assets/img/map.svg')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Impossibile caricare la mappa');
-      }
-      return response.text();
-    })
+  fetch('assets/img/it.svg')
+    .then(response => response.text())
     .then(svgText => {
       const sanitizedSvg = svgText.replace(/<\?xml[^>]*?>/i, '');
       mapContainer.innerHTML = sanitizedSvg;
@@ -199,92 +124,97 @@ export function loadItalyMap() {
       const svgElement = mapContainer.querySelector('svg');
       if (svgElement) {
         svgElement.classList.add('italy-map');
-        setupProvinceInteractions(svgElement);
+        setupRegionInteractions(svgElement);
       }
     })
-    .catch(error => {
-      console.error('Errore durante il caricamento della mappa:', error);
-    });
+    .catch(err => console.error("Errore durante il caricamento della mappa:", err));
 }
 
-function populateSuggestionLocationOptions() {
-  const select = document.getElementById('suggestLocation');
-  if (!select) {
-    return;
-  }
 
-  select.innerHTML = '';
 
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = 'Non specificato';
-  select.appendChild(placeholder);
-
-  const provincesGroup = document.createElement('optgroup');
-  provincesGroup.label = 'Province';
-  provinceList.forEach(name => {
-    const option = document.createElement('option');
-    option.value = name;
-    option.textContent = name;
-    provincesGroup.appendChild(option);
-  });
-  select.appendChild(provincesGroup);
-
-  const regionGroup = document.createElement('optgroup');
-  regionGroup.label = 'Regioni';
-  regionList.forEach(name => {
-    const option = document.createElement('option');
-    option.value = name;
-    option.textContent = name;
-    regionGroup.appendChild(option);
-  });
-  select.appendChild(regionGroup);
-}
-
-function populateProvinceSelects() {
-  const selects = document.querySelectorAll('select[data-populate="province"]');
-  selects.forEach(select => {
-    const currentValue = select.value;
-    select.innerHTML = '';
-    const placeholder = document.createElement('option');
-    placeholder.value = '';
-    placeholder.textContent = 'Seleziona provincia';
-    select.appendChild(placeholder);
-    provinceList.forEach(name => {
-      const option = document.createElement('option');
-      option.value = name;
-      option.textContent = name;
-      select.appendChild(option);
-    });
-    if (currentValue) {
-      select.value = currentValue;
-    }
-  });
-}
+// ===============================================================
+//   POPOLAMENTO SELECT (REGIONI)
+// ===============================================================
 
 function populateRegionSelects() {
   const selects = document.querySelectorAll('select[data-populate="region"]');
+  
   selects.forEach(select => {
     const currentValue = select.value;
-    select.innerHTML = '';
+    select.innerHTML = '';   //svuotiamo i select
+
+	//creazione voce seleziona regione
     const placeholder = document.createElement('option');
     placeholder.value = '';
     placeholder.textContent = 'Seleziona regione';
     select.appendChild(placeholder);
+
+	//aggiungi le opzioni regioni
     regionList.forEach(name => {
       const option = document.createElement('option');
       option.value = name;
       option.textContent = name;
       select.appendChild(option);
     });
+
     if (currentValue) {
       select.value = currentValue;
     }
   });
 }
 
-export function populateLocationSelectors() {
-  populateSuggestionLocationOptions();
-  populateProvinceSelects();
-  populateRegionSelects();
+function populateProvinceOptions(select, regionValue) {
+  select.innerHTML = ''; //svuotiamo i select
+
+  //creazione voce corretta
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = regionValue ? 'Seleziona provincia' : 'Seleziona prima una regione';
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+  
+  //se non è stata ancora selezionata una regione, disabilita select provincia
+  if (!regionValue) {
+    select.disabled = true;
+    return;
+  }
+  select.disabled = false;
+
+  //crea opzioni province della regione selezionata
+  const provinces = regionProvinceMap[regionValue] || [];
+  provinces.forEach(name => {
+    const option = document.createElement('option');
+    option.value = name;
+    option.textContent = name;
+    select.appendChild(option);
+  });
+
 }
+
+
+// ===============================================================
+//   EXPORT FINALE
+// ===============================================================
+
+export function populateLocationSelectors() {
+  populateRegionSelects();
+
+  const regionSelects = document.querySelectorAll('select[data-populate="region"]');
+  const provinceSelects = document.querySelectorAll('select[data-populate="province"]');
+
+  // Disattiva tutte le province all'avvio
+  provinceSelects.forEach(select => populateProvinceOptions(select, null));
+
+  // Collega ogni coppia select regione → select provincia
+  regionSelects.forEach((regionSelect, index) => {
+    const provinceSelect = provinceSelects[index];
+
+    if (!provinceSelect) return;
+
+    regionSelect.addEventListener('change', () => {
+      populateProvinceOptions(provinceSelect, regionSelect.value);
+    });
+  });
+}
+
+

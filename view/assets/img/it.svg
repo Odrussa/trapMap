@@ -55,46 +55,6 @@
   <circle class="46.50541639995385|17.921691093969827" cx="814.5" cy="95.1" id="2">
   </circle>
  </g>
- <g id="label_points">
-  <circle class="Valle d'Aosta" cx="191.7" cy="162.5" id="IT23">
-  </circle>
-  <circle class="Piedmont" cx="222.1" cy="223.6" id="IT21">
-  </circle>
-  <circle class="Liguria" cx="303.6" cy="265.7" id="IT42">
-  </circle>
-  <circle class="Lombardy" cx="335.3" cy="162.3" id="IT25">
-  </circle>
-  <circle class="Trentino-Alto Adige" cx="425.9" cy="103.4" id="IT32">
-  </circle>
-  <circle class="Veneto" cx="452.6" cy="177.5" id="IT34">
-  </circle>
-  <circle class="Friuli Venezia Giulia" cx="524.3" cy="119.2" id="IT36">
-  </circle>
-  <circle class="Tuscany" cx="417.6" cy="348.5" id="IT52">
-  </circle>
-  <circle class="Umbria" cx="495.2" cy="388.3" id="IT55">
-  </circle>
-  <circle class="Lazio" cx="505.4" cy="468" id="IT62">
-  </circle>
-  <circle class="Abruzzo" cx="574.7" cy="445.8" id="IT65">
-  </circle>
-  <circle class="Puglia" cx="727.9" cy="543.2" id="IT75">
-  </circle>
-  <circle class="Campania" cx="632.7" cy="539.8" id="IT72">
-  </circle>
-  <circle class="Molise" cx="625.7" cy="490.6" id="IT67">
-  </circle>
-  <circle class="Basilicata" cx="706.8" cy="582.9" id="IT77">
-  </circle>
-  <circle class="Calabria" cx="729.8" cy="677.6" id="IT78">
-  </circle>
-  <circle class="Sicilia" cx="593.5" cy="803" id="IT82">
-  </circle>
-  <circle class="Sardegna" cx="294" cy="610.8" id="IT88">
-  </circle>
-  <circle class="Emilia-Romagna" cx="409.5" cy="260.7" id="IT45">
-  </circle>
-  <circle class="Marche" cx="541.6" cy="363.8" id="IT57">
-  </circle>
- </g>
+
+
 </svg>
