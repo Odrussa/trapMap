@@ -16,15 +16,24 @@
   <a href="index.html" class="back-button">&larr; Torna alla mappa</a>
 </header>
 
-<main>
-   <div class="form-field">
-	<label for="provinceOption">Provincia *</label>
-	<select id="provinceOption" name="province" data-populate="province" disabled>
-	  <option value=""></option>
-	</select>
-   </div>
-		  
-  <div id="artist-cards" class="cards-container"></div>
+<main class="artists-page">
+  <section class="page-hero">
+    <h1 id="page-title"></h1>
+    <p class="page-subtitle">Scegli la provincia e scopri gli artisti della zona.</p>
+  </section>
+
+  <section class="artists-filters" aria-label="Filtri artisti">
+    <div class="form-field compact">
+      <label for="artistProvince">Provincia *</label>
+      <select id="artistProvince" name="province" data-populate="province" disabled>
+        <option value=""></option>
+      </select>
+    </div>
+  </section>
+
+  <section class="cards-section">
+    <div id="artist-cards" class="cards-container"></div>
+  </section>
 </main>
 
 <footer>
@@ -36,6 +45,6 @@
   </div>
 </footer>
 
-<script src="assets/js/artists.js"></script>
+<script type="module" src="assets/js/artists.js"></script>
 </body>
 </html>
