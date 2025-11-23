@@ -62,38 +62,6 @@ h1#page-title {
     padding: 0 8px;
 }
 
-.artist-card {
-    width: 100%;
-    max-width: 320px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.artist-card-core {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.artist-card-core:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 0 28px rgba(255, 57, 240, 0.35);
-}
-
-.artist-card-alias {
-    font-size: 0.85rem;
-    color: var(--text-primary);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.artist-card-links a {
-    color: var(--neon-pink);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.artist-card-links a:hover,
-.artist-card-links a:focus {
-    color: var(--neon-green);
-}
 
 footer {
     margin-top: 40px;

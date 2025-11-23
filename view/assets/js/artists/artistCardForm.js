@@ -2,7 +2,7 @@
 //   FORM ARTISTI
 // ===============================================================
 
-import { setFormFeedback, showGlobalNotification } from './notifications.js';
+import { setFormFeedback, showGlobalNotification } from '../notifications.js';
 import { ArtistCardFactory } from './ArtistCardFactory.js';
 
 

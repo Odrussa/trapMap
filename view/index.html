@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TrapMap</title>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/artistCard.css">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
@@ -176,19 +177,7 @@
         <button type="submit" class="btn-primary submit-button" id="artistCardSubmit">Crea la mia artist card</button>
       </form>
       <aside class="artist-card-preview" aria-live="polite" aria-label="Anteprima live della artist card">
-        <div class="artist-preview-card">
-          <div class="artist-preview-image" id="artistPreviewImageContainer">
-            <img id="artistPreviewImage" alt="Anteprima immagine artista" hidden>
-            <span class="artist-preview-placeholder">Carica un'immagine per la tua card</span>
-          </div>
-          <div class="artist-preview-body">
-            <h3 id="artistPreviewName">Nome artista</h3>
-            <p id="artistPreviewAlias">@alias</p>
-            <p id="artistPreviewLocation" class="artist-preview-meta">Provincia</p>
-            <p id="artistPreviewCategory" class="artist-preview-category">Categoria</p>
-            <ul id="artistPreviewLinks" class="artist-preview-links"></ul>
-          </div>
-        </div>
+       <div id="artistPreviewContainer"></div>
       </aside>
     </div>
   </div>
@@ -245,6 +234,6 @@
 <div id="globalNotification" class="global-notification hidden" role="status" aria-live="polite"></div>
 
 <!-- LINK JS -->
-<script type="module" src="assets/js/main.js"></script>
+<script type="module" src="assets/artists/js/main.js"></script>
 </body>
 </html>

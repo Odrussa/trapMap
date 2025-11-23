@@ -2,7 +2,8 @@
 // ===============================================================
 //   PAGINA ARTISTI
 // ===============================================================
-import { populateProvinceOptions } from './location-utils.js';
+import { populateProvinceOptions } from '../location-utils.js';
+import { ArtistCardFactory } from './ArtistCardFactory.js';
 
 // Recupera la regione dalla query string
 const params = new URLSearchParams(window.location.search);
@@ -48,3 +49,6 @@ fetch(`../controller/ArtistsController.php?region=${encodeURIComponent(region ??
   .catch(err => {
     console.error('Errore nel fetch:', err);
   });
+ 
+  
+ 
