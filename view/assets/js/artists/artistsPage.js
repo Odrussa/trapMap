@@ -2,22 +2,28 @@
 // ===============================================================
 //   PAGINA ARTISTI
 // ===============================================================
+import { populateProvinceOptions } from '../location-utils.js';
+import { ArtistCardFactory } from './ArtistCardFactory.js';
 
 // Recupera la regione dalla query string
 const params = new URLSearchParams(window.location.search);
 const region = params.get('region');
 
-
-document.getElementById('page-title').textContent = region
-  ? `Artisti della regione ${region}`
-  : `Artisti della regione`;
-
+// Aggiorna il titolo pagina con la regione corrente
+const pageTitle = document.getElementById('page-title');
+if (pageTitle) {
+  pageTitle.textContent = region
+    ? `Artisti della regione ${region}`
+    : 'Artisti della regione';
+}
 
 //Aggancio la select province
-const provinceSelect = document.getElementById("artistProvince");
+const provinceSelect = document.getElementById('artistProvince');
 
 //Popolo solo le province di quella regione
-populateProvinceOptions(provinceSelect, region);
+if (provinceSelect) {
+  populateProvinceOptions(provinceSelect, region);
+}
 
 
 fetch(`../controller/ArtistsController.php?region=${encodeURIComponent(region ?? '')}`)
@@ -43,3 +49,6 @@ fetch(`../controller/ArtistsController.php?region=${encodeURIComponent(region ??
   .catch(err => {
     console.error('Errore nel fetch:', err);
   });
+ 
+  
+ 

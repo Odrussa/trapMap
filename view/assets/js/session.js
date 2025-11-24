@@ -1,6 +1,6 @@
 import { showGlobalNotification } from './notifications.js';
 import { openSuggestionForm } from './suggestions.js';
-import { openArtistCardForm, registerArtistCardCreatedCallback } from './artistCard.js';
+import { openArtistCardForm, registerArtistCardCreatedCallback } from './artists/artistCardForm.js';
 import { openLogin } from './auth.js';
 
 const navList = document.querySelector('header nav ul');

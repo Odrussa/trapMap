@@ -2,7 +2,9 @@
 //   FORM ARTISTI
 // ===============================================================
 
-import { setFormFeedback, showGlobalNotification } from './notifications.js';
+import { setFormFeedback, showGlobalNotification } from '../notifications.js';
+import { ArtistCardFactory } from './ArtistCardFactory.js';
+
 
 const artistCardModal = document.getElementById('artistCardModal');
 const artistCardForm = document.getElementById('artistCardForm');
@@ -21,16 +23,12 @@ const artistInstagramInput = document.getElementById('artistInstagram');
 const artistSoundcloudInput = document.getElementById('artistSoundcloud');
 const artistImageInput = document.getElementById('artistImage');
 
-const artistPreviewName = document.getElementById('artistPreviewName');
-const artistPreviewAlias = document.getElementById('artistPreviewAlias');
-const artistPreviewLocation = document.getElementById('artistPreviewLocation');
-const artistPreviewCategory = document.getElementById('artistPreviewCategory');
-const artistPreviewLinks = document.getElementById('artistPreviewLinks');
-const artistPreviewImage = document.getElementById('artistPreviewImage');
-const artistPreviewImageContainer = document.getElementById('artistPreviewImageContainer');
+const artistPreviewContainer = document.getElementById('artistPreviewContainer');
 
 let artistCardMode = 'create';
 const artistCardCreatedCallbacks = [];
+
+let previewImageSrc = null
 
 export function registerArtistCardCreatedCallback(callback) {
   if (typeof callback === 'function') {
@@ -80,63 +78,33 @@ export function isArtistCardFormOpen() {
 }
 
 function refreshArtistPreview() {
-  if (!artistPreviewName || !artistPreviewAlias || !artistPreviewLocation || !artistPreviewCategory || !artistPreviewLinks) {
-    return;
-  }
+  const artistObj = {
+    nome: artistNameInput?.value.trim() || "Nome artista",
+    alias: artistAliasInput?.value.trim().replace(/^@+/, '') || "alias",
+    provincia: artistProvinceInput?.value.trim() || "Provincia",
+    categorie: artistCategoryInput?.value || "Categoria",
+    spotify: artistSpotifyInput?.value.trim(),
+    instagram: artistInstagramInput?.value.trim(),
+    soundcloud: artistSoundcloudInput?.value.trim(),
+    immagine: previewImageSrc   // <-- QUESTA È LA FIX
+  };
 
-  const nameValue = artistNameInput?.value.trim();
-  const aliasValue = artistAliasInput?.value.trim().replace(/^@+/, '');
-  const regionValue = artistRegionInput?.value.trim();
-  const provinceValue = artistProvinceInput?.value.trim();
-  const categoryValue = artistCategoryInput?.value;
+  // Svuota TUTTA la preview
+  artistPreviewContainer.innerHTML = "";
 
-  artistPreviewName.textContent = nameValue || 'Nome artista';
-  artistPreviewAlias.textContent = aliasValue ? `@${aliasValue}` : '@alias';
+  // Crea nuova card dalla factory
+  const card = ArtistCardFactory.createCard("standard", artistObj);
 
-  artistPreviewLocation.textContent = provinceValue || 'Provincia';
-
-  let categoryLabel = 'Categoria';
-  if (categoryValue === 'rapper') {
-    categoryLabel = 'Rapper';
-  } else if (categoryValue === 'producer') {
-    categoryLabel = 'Producer';
-  } else if (categoryValue === 'both') {
-    categoryLabel = 'Rapper, Producer';
-  }
-  artistPreviewCategory.textContent = categoryLabel;
-
-  artistPreviewLinks.innerHTML = '';
-  const links = [
-    { input: artistSpotifyInput, label: 'Spotify' },
-    { input: artistInstagramInput, label: 'Instagram' },
-    { input: artistSoundcloudInput, label: 'SoundCloud' }
-  ];
-
-  links
-    .map(item => ({ value: item.input?.value.trim(), label: item.label }))
-    .filter(item => item.value)
-    .forEach(item => {
-      const listItem = document.createElement('li');
-      listItem.textContent = item.label;
-      artistPreviewLinks.appendChild(listItem);
-    });
+  // Inseriscila
+  artistPreviewContainer.appendChild(card);
 }
+
 
 function updateArtistPreviewImage(source) {
-  if (!artistPreviewImage || !artistPreviewImageContainer) {
-    return;
-  }
-
-  if (source) {
-    artistPreviewImage.src = source;
-    artistPreviewImage.hidden = false;
-    artistPreviewImageContainer.classList.add('has-image');
-  } else {
-    artistPreviewImage.removeAttribute('src');
-    artistPreviewImage.hidden = true;
-    artistPreviewImageContainer.classList.remove('has-image');
-  }
+  previewImageSrc = source || null;
+  refreshArtistPreview();
 }
+
 
 function handleArtistImageChange(event) {
   const file = event.target.files?.[0];
@@ -155,7 +123,7 @@ function handleArtistImageChange(event) {
 function attachPreviewListeners() {
   artistNameInput?.addEventListener('input', refreshArtistPreview);
   artistAliasInput?.addEventListener('input', refreshArtistPreview);
-  artistRegionInput?.addEventListener('change', refreshArtistPreview);
+ 
   artistProvinceInput?.addEventListener('change', refreshArtistPreview);
   artistCategoryInput?.addEventListener('change', refreshArtistPreview);
   artistSpotifyInput?.addEventListener('input', refreshArtistPreview);

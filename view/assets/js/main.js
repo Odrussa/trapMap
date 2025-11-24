@@ -1,7 +1,7 @@
 import { initMenuToggle } from './menu.js';
 import { initAuth, openLogin, openRegister } from './auth.js';
 import { initSuggestionForm, closeSuggestionForm, isSuggestionFormOpen } from './suggestions.js';
-import { initArtistCardForm, closeArtistCardForm, isArtistCardFormOpen } from './artistCard.js';
+import { initArtistCardForm, closeArtistCardForm, isArtistCardFormOpen } from './artists/artistCardForm.js';
 import { initSessionUI, checkUserSession, handleEscapeKey } from './session.js';
 import { populateLocationSelectors } from './location-utils.js';
 import { loadItalyMap } from './map.js';

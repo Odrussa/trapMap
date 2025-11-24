@@ -572,21 +572,10 @@ nav ul li a:focus {
     text-shadow: 0 0 6px rgba(255, 57, 240, 0.45);
 }
 
-/* ---------------- ARTIST PREVIEW ---------------- */
-.artist-card-preview {
-    flex: 1 1 280px;
-    background: linear-gradient(160deg, rgba(57, 255, 20, 0.12), rgba(255, 57, 240, 0.1));
-    border-radius: var(--border-radius);
-    border: 1px solid rgba(57, 255, 20, 0.35);
-    padding: 24px;
-    box-shadow: 0 0 18px rgba(57, 255, 20, 0.25);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.artist-preview-card,
-.artist-card-core {
+/* ------------------ CARD ARTISTA (usata ovunque) ------------------ */
+
+.artist-card {
     width: 100%;
     max-width: 320px;
     background: #050505;
@@ -596,49 +585,36 @@ nav ul li a:focus {
     box-shadow: 0 0 22px rgba(57, 255, 20, 0.35);
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.artist-card-core {
-    height: 100%;
+.artist-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 28px rgba(255, 57, 240, 0.35);
 }
 
-.artist-preview-image,
+
 .artist-card-image {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
-    background: radial-gradient(circle at 30% 30%, rgba(57, 255, 20, 0.35), transparent 70%);
+    aspect-ratio: 1 / 1;         /* mantiene la forma quadrata */
+    min-height: 280px;           /* PREVENTS COLLAPSE – FIX PREVIEW SMALL */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+
+    /* Placeholder neon quando non c’è immagine */
+    background: radial-gradient(circle at 30% 30%, rgba(57, 255, 20, 0.35), transparent 70%);
 }
 
-.artist-preview-image.has-image .artist-preview-placeholder {
-    display: none;
-}
-
-.artist-preview-image img,
 .artist-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.artist-preview-image img[hidden] {
-    display: none !important;
-}
 
-.artist-preview-placeholder {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 0 20px;
-}
-
-.artist-preview-body,
 .artist-card-body {
     padding: 20px;
     display: flex;
@@ -646,7 +622,6 @@ nav ul li a:focus {
     gap: 10px;
 }
 
-.artist-preview-body h3,
 .artist-card-body h3 {
     font-family: 'Press Start 2P', cursive;
     font-size: 1rem;
@@ -654,23 +629,28 @@ nav ul li a:focus {
     text-shadow: 0 0 10px var(--neon-green);
 }
 
-.artist-preview-meta,
+.artist-card-alias {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
 .artist-card-meta {
     font-size: 0.8rem;
     color: var(--text-muted);
-    /*font-style: italic;*/
     text-transform: capitalize;
     letter-spacing: 0.05em;
 }
 
-.artist-preview-category,
 .artist-card-category {
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--neon-pink);
 }
 
-.artist-preview-links,
+
+/* Bottoni dei link nelle card */
 .artist-card-links {
     list-style: none;
     display: flex;
@@ -680,24 +660,55 @@ nav ul li a:focus {
     padding: 0;
 }
 
-.artist-preview-links:empty::before {
-    content: 'Aggiungi i tuoi link';
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-}
-
-.artist-preview-links li,
 .artist-card-links li {
-    padding: 6px 10px;
+    padding: 6px 14px;
     border-radius: 999px;
     border: 1px solid rgba(255, 57, 240, 0.35);
     background: rgba(255, 57, 240, 0.12);
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
 }
+
+.artist-card-links li:hover {
+    border-color: var(--neon-green);
+    background: rgba(57, 255, 20, 0.15);
+}
+
+/* Il link interno NON ha stile proprio */
+.artist-card-links a {
+    all: unset;                /* cancelliamo lo stile predefinito */
+    cursor: pointer;
+    color: var(--neon-pink);   /* colore testo */
+    font-weight: 600;
+}
+
+.artist-card-links li:hover a {
+    color: var(--neon-green);
+}
+
+
+
+/* Contenitore della card di preview nel form */
+.artist-card-preview {
+    flex: 1 1 280px;
+    background: linear-gradient(160deg, rgba(57, 255, 20, 0.12), rgba(255, 57, 240, 0.1));
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(57, 255, 20, 0.35);
+    padding: 24px;
+    box-shadow: 0 0 18px rgba(57, 255, 20, 0.25);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 
 /* ---------------- AUTH MODALS (LOGIN / REGISTER) ---------------- */
 .overlay {
